@@ -1,0 +1,22 @@
+{
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/.cache/**": true,
+    "**/dist/**": true,
+    "**/build/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/package-lock.json": true
+  },
+  "files.exclude": {
+    "**/.next": true
+  },
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "eslint.lintTask.enable": true,
+  "eslint.runtime": "node"
+}
