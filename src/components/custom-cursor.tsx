@@ -1,26 +1,17 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useIsMobile } from '@/lib/useIsMobile';
 
 export default function CustomCursor() {
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const touchIndicatorRef = useRef<HTMLDivElement>(null);
   const touchRippleRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile(768);
 
   useEffect(() => {
-    // Detect mobile
-    const checkMobile = () => {
-      const isMobileDevice = window.innerWidth < 768 || 
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      setIsMobile(isMobileDevice);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
     const outerEl = outerRef.current;
     const innerEl = innerRef.current;
     const touchIndicatorEl = touchIndicatorRef.current;
@@ -111,7 +102,6 @@ export default function CustomCursor() {
         document.removeEventListener('touchstart', handleTouchStart);
         document.removeEventListener('touchmove', handleTouchMove);
         document.removeEventListener('touchend', handleTouchEnd);
-        window.removeEventListener('resize', checkMobile);
       };
     } else {
       // DESKTOP: Traditional mouse cursor
@@ -217,13 +207,15 @@ export default function CustomCursor() {
       document.addEventListener('mouseout', handleOut);
 
       // Initialize position at center and make visible
-      gsap.set([outerEl, innerEl], {
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
-        xPercent: -50,
-        yPercent: -50,
-        opacity: 1,
-      });
+      if (typeof window !== 'undefined') {
+        gsap.set([outerEl, innerEl], {
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2,
+          xPercent: -50,
+          yPercent: -50,
+          opacity: 1,
+        });
+      }
 
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
@@ -231,7 +223,6 @@ export default function CustomCursor() {
         document.removeEventListener('mouseup', handleMouseUp);
         document.removeEventListener('mouseover', handleOver);
         document.removeEventListener('mouseout', handleOut);
-        window.removeEventListener('resize', checkMobile);
       };
     }
   }, [isMobile]);

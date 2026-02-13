@@ -27,15 +27,16 @@ export default function SiteHeader() {
       const navbarCenter = navbarRect.top + navbarRect.height / 2;
 
       // Check multiple points across the navbar
-      const points = [
+      const points = typeof window !== 'undefined' ? [
         window.innerWidth / 2,
         window.innerWidth * 0.3,
         window.innerWidth * 0.7
-      ];
+      ] : [];
 
       let whiteCount = 0;
       
       points.forEach(x => {
+        if (typeof document === 'undefined') return;
         const element = document.elementFromPoint(x, navbarCenter);
         if (element) {
           // Check if element or any parent has white background
@@ -43,9 +44,9 @@ export default function SiteHeader() {
           let foundWhite = false;
           
           while (currentElement && currentElement !== document.body && !foundWhite) {
-            const classNames = currentElement.className || '';
-            const computedStyle = window.getComputedStyle(currentElement);
-            const bgColor = computedStyle.backgroundColor;
+            const classNames = String(currentElement.className || '');
+            const computedStyle = typeof window !== 'undefined' ? window.getComputedStyle(currentElement) : null;
+            const bgColor = computedStyle?.backgroundColor || '';
             
             // Check for white background class or RGB values
             if (classNames.includes('bg-white') || 

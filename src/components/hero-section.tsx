@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile(768);
   const containerRef = useRef<HTMLDivElement>(null);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInteractiveRef = useRef(true);
@@ -22,16 +23,6 @@ export default function HeroSection() {
   ];
 
   useEffect(() => {
-    // Better mobile detection for real devices
-    const checkMobile = () => {
-      const isMobileDevice = window.innerWidth < 768 || 
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      setIsMobile(isMobileDevice);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
     // Auto-slide through all 7
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % facilities.length);
@@ -39,7 +30,6 @@ export default function HeroSection() {
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener("resize", checkMobile);
     };
   }, [facilities.length]);
 

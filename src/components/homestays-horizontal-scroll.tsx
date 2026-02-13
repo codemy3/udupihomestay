@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -61,19 +62,8 @@ const homestays = [
 export default function HomestaysHorizontalScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile(768);
   const [centerCardIndex, setCenterCardIndex] = useState(0);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -91,7 +81,7 @@ export default function HomestaysHorizontalScroll() {
       const padding = isMobile ? 64 : 128; // Account for px-8 md:px-16 (32px/64px on each side)
       
       // Calculate visible viewport width
-      const viewportWidth = window.innerWidth;
+      const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
       
       // Total width of all cards
       const totalCardsWidth = (cardWidth * homestays.length) + (gap * (homestays.length - 1));

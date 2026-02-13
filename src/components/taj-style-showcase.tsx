@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
+import { useIsMobile } from '@/lib/useIsMobile';
 import Image from 'next/image';
 
 const homestays = [
@@ -31,18 +32,7 @@ export default function HomestaysStickyScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const isMobile = useIsMobile(1024);
 
   useEffect(() => {
     // Skip scroll handling on mobile
@@ -53,7 +43,7 @@ export default function HomestaysStickyScroll() {
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 0;
       
       // Calculate scroll progress through the container
       const scrollStart = rect.top;
