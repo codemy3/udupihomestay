@@ -49,30 +49,30 @@ export default function HeroSection() {
           {isMobile ? (
             <>
               {/* Mobile: Slider right bottom, text left bottom, both bottom-aligned */}
-              <div className="flex w-full items-end h-full">
-                <div className="flex flex-col items-start w-2/3 pb-0 justify-end animate-mobile-hero-fade">
-                  <h1 className="text-white text-left text-[24px] sm:text-[32px] leading-tight font-serif mb-[8px] tracking-tight animate-mobile-hero-slide">
+              <div className="flex w-full items-end h-full gap-2">
+                <div className="flex flex-col items-start w-[52%] pb-0 justify-end animate-mobile-hero-fade">
+                  <h1 className="text-white text-left text-[20px] sm:text-[28px] leading-tight font-serif mb-[6px] tracking-tight animate-mobile-hero-slide">
                     Hotel restin Best Hotel In Town
                   </h1>
-                  <p className="text-left text-[12px] font-medium text-white mb-[12px] leading-relaxed">
+                  <p className="text-left text-[11px] font-medium text-white mb-[10px] leading-relaxed">
                     Thoughtful stays in Udupi with calm views, warm hospitality, and comfort that feels like home.
                   </p>
                   <a
                     href="/rooms"
-                    className="theme-btn relative inline-flex items-center justify-center text-white uppercase font-medium bg-[#849826] z-10 overflow-hidden h-[44px] px-[20px] leading-none shadow-[0_10px_30px_rgba(0,0,0,0.35)] group hover:bg-[#6f801f] transition-colors duration-300 text-[12px] font-semibold"
+                    className="theme-btn relative inline-flex items-center justify-center text-white uppercase font-medium bg-[#849826] z-10 overflow-hidden h-[40px] px-[18px] leading-none shadow-[0_10px_30px_rgba(0,0,0,0.35)] group hover:bg-[#6f801f] transition-colors duration-300 text-[11px] font-semibold"
                   >
                     <span className="relative z-10">View Homestays</span>
                   </a>
                 </div>
-                <div className="w-1/3 flex-shrink-0 flex justify-end items-end pb-0">
+                <div className="w-[48%] flex-shrink-0 flex justify-end items-end pb-0 self-stretch">
                   <div
-                    className="hero-box max-w-[140px] w-full rounded-[12px] backdrop-blur-[40px] p-1.5 bg-cover border border-white/10 shadow-lg"
+                    className="hero-box w-full rounded-[12px] backdrop-blur-[40px] p-1.5 bg-cover border border-white/10 shadow-lg flex flex-col"
                     style={{ backgroundImage: "url(/hero-color-bg.png)" }}
                   >
                     {/* Image Slider (mobile) */}
-                    <div className="relative overflow-hidden mb-2 rounded-[10px]">
+                    <div className="relative overflow-hidden mb-2 rounded-[10px] flex-1 min-h-0 flex items-center">
                       <div
-                        className="flex transition-transform duration-500 ease-in-out"
+                        className="flex transition-transform duration-500 ease-in-out w-full"
                         style={{
                           gap: 0,
                           transform: `translateX(-${currentSlide * 100}%)`
@@ -81,9 +81,9 @@ export default function HeroSection() {
                         {[...facilities, ...facilities].map((facility, idx) => (
                           <div
                             key={idx}
-                            className="flex-shrink-0 w-full"
+                            className="flex-shrink-0 w-full flex flex-col"
                           >
-                            <div className="rounded-[10px] overflow-hidden relative mb-1 flex items-center justify-center bg-black/10 aspect-[16/10]">
+                            <div className="rounded-[10px] overflow-hidden relative w-full aspect-[4/3] bg-black/10">
                               <Image
                                 src={facility.img}
                                 alt={facility.title}
@@ -91,7 +91,7 @@ export default function HeroSection() {
                                 className="object-cover brightness-110 contrast-110 scale-105"
                               />
                             </div>
-                            <p className="text-white text-center text-[12px] font-semibold tracking-wide leading-tight">
+                            <p className="text-white text-center text-[11px] font-semibold tracking-wide leading-tight mt-1.5">
                               {facility.title}
                             </p>
                           </div>
@@ -99,15 +99,15 @@ export default function HeroSection() {
                       </div>
                     </div>
                     {/* Title and Dots BELOW the slider */}
-                    <div className="flex flex-col gap-1 px-1 pb-1 overflow-hidden">
-                      <h4 className="text-white tracking-[0.5px] font-heading text-[13px] whitespace-nowrap mb-0">Our Homestays</h4>
+                    <div className="flex flex-col gap-1 px-1.5 pb-1.5 overflow-hidden">
+                      <h4 className="text-white tracking-[0.5px] font-heading text-[12px] whitespace-nowrap mb-0">Our Homestays</h4>
                       <div className="flex flex-wrap gap-1.5 justify-start items-center w-full max-w-full overflow-hidden">
                         {facilities.map((_, idx) => (
                           <div
                             key={idx}
-                            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                            className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
                               idx === currentSlide
-                                ? "bg-[#849826] w-3"
+                                ? "bg-[#849826] w-4"
                                 : "bg-white/40 hover:bg-white/60"
                             }`}
                             onClick={() => setCurrentSlide(idx)}
@@ -145,46 +145,49 @@ export default function HeroSection() {
               {/* RIGHT: Image Slider */}
               <div className="w-full md:w-[60%] lg:w-[54%] flex-shrink-0">
                 <div
-                  className={`${!isMobile ? "animate-fade-up-4" : ""} hero-box w-full rounded-[10px] backdrop-blur-[40px] p-2 bg-cover`}
+                  className={`${!isMobile ? "animate-fade-up-4" : ""} hero-box w-full rounded-[10px] backdrop-blur-[40px] p-1.5 bg-cover`}
                   style={{
                     backgroundImage: "url(/hero-color-bg.png)",
                   }}
                 >
-                  {/* Arrows ABOVE the slider */}
-                  <div className="flex gap-2.5 justify-end mb-[12px]">
-                    <button
-                      onClick={() => setCurrentSlide((prev) => (prev - 1 + facilities.length) % facilities.length)}
-                      className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-[#849826] hover:border-[#849826] transition-all duration-300"
-                      aria-label="Previous slide"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => setCurrentSlide((prev) => (prev + 1) % facilities.length)}
-                      className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-[#849826] hover:border-[#849826] transition-all duration-300"
-                      aria-label="Next slide"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
+                  {/* Title and Arrows in one row ABOVE the slider */}
+                  <div className="flex justify-between items-center mb-2.5">
+                    <h4 className="text-white tracking-[0.5px] font-heading text-[20px] md:text-[24px] mb-0">Our Homestays</h4>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setCurrentSlide((prev) => (prev - 1 + facilities.length) % facilities.length)}
+                        className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-[#849826] hover:border-[#849826] transition-all duration-300"
+                        aria-label="Previous slide"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => setCurrentSlide((prev) => (prev + 1) % facilities.length)}
+                        className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-[#849826] hover:border-[#849826] transition-all duration-300"
+                        aria-label="Next slide"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   {/* Image Slider */}
-                  <div className="relative overflow-hidden mb-[32px]">
+                  <div className="relative overflow-hidden mb-2">
                     <div
-                      className="flex gap-[28px] transition-transform duration-500 ease-in-out"
+                      className="flex gap-3 transition-transform duration-500 ease-in-out"
                       style={{
-                        transform: `translateX(-${currentSlide * (100 / 3 + 28 / 3)}%)`
+                        transform: `translateX(-${currentSlide * (100 / 3 + 3 / 3)}%)`
                       }}
                     >
                       {[...facilities, ...facilities].map((facility, idx) => (
                         <div
                           key={idx}
-                          className="flex-shrink-0 w-[calc(33.333%-18px)]"
+                          className="flex-shrink-0 w-[calc(33.333%-8px)]"
                         >
-                          <div className="aspect-[16/11] rounded-[14px] overflow-hidden relative mb-2 flex items-center justify-center bg-black/10">
+                          <div className="aspect-[16/10] rounded-[14px] overflow-hidden relative flex items-center justify-center bg-black/10">
                             <Image
                               src={facility.img}
                               alt={facility.title}
@@ -192,17 +195,16 @@ export default function HeroSection() {
                               className="object-cover brightness-110 contrast-110 scale-110"
                             />
                           </div>
-                          <p className="text-white text-center text-[13px] font-semibold tracking-wide">
+                          <p className="text-white text-center text-[13px] font-semibold tracking-wide mb-0 pb-0 mt-1">
                             {facility.title}
                           </p>
                         </div>
                       ))}
                     </div>
                   </div>
-                  {/* Title and Dots BELOW the slider */}
+                  {/* Dots BELOW the slider */}
                   <div className="flex justify-between items-center">
-                    <h4 className="text-white tracking-[0.5px] font-heading text-[16px] md:text-[18px]">Our Homestays</h4>
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-1.5 mt-0">
                       {facilities.map((_, idx) => (
                         <div
                           key={idx}

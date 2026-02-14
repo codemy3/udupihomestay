@@ -47,16 +47,6 @@ export default function SiteFooter() {
         {/* Main Footer Content */}
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 xl:px-12 pt-24 md:pt-32 pb-8 md:pb-12">
           <div className="grid gap-8 md:gap-12 sm:grid-cols-2 lg:grid-cols-4 mb-12 md:mb-16">
-            {/* About Us Section */}
-            <div className="space-y-4 md:space-y-6">
-              <div>
-                <h3 className="text-[22px] md:text-[28px] font-serif text-white mb-1">About us</h3>
-                <div className="w-16 h-[2px] bg-[#849826]"></div>
-              </div>
-              <p className="text-gray-300 leading-relaxed text-[14px] md:text-[15px]">
-                Experience unique comfort at Udupi Homestays with six distinct stays, a spacious park, pool with jacuzzi, and rooftop views.
-              </p>
-            </div>
 
             {/* Important Links */}
             <div className="space-y-4 md:space-y-6">
@@ -83,31 +73,6 @@ export default function SiteFooter() {
               </div>
             </div>
 
-            {/* Highlights */}
-            <div className="space-y-4 md:space-y-6">
-              <div>
-                <h3 className="text-[22px] md:text-[28px] font-serif text-white mb-1">Highlights</h3>
-                <div className="w-16 h-[2px] bg-[#849826]"></div>
-              </div>
-              <div className="flex flex-col gap-3 text-gray-300 text-[14px] md:text-[15px]">
-                <div className="flex justify-between items-center">
-                  <span>Signature homestays</span>
-                  <span className="text-white">6+</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Families hosted</span>
-                  <span className="text-white">2,000+</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Privacy ensured</span>
-                  <span className="text-white">100%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Satisfaction</span>
-                  <span className="text-white">100%</span>
-                </div>
-              </div>
-            </div>
 
             {/* Contact Us */}
             <div className="space-y-4 md:space-y-6">
