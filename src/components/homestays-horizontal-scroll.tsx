@@ -89,7 +89,7 @@ export default function HomestaysHorizontalScroll() {
       id="homestays-section"
       className="relative bg-cover bg-center bg-no-repeat bg-fixed"
       style={{
-        backgroundImage: "url(/view/v4.webp)",
+        backgroundImage: "url(/view/V4.webp)",
         backgroundColor: "#f8f7f4",
       }}
     >
