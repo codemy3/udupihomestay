@@ -15,6 +15,7 @@ const navItems = [
 ];
 
 export default function SiteHeader() {
+  // Default to false so text is white on load (over hero)
   const [isOverWhite, setIsOverWhite] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -66,7 +67,12 @@ export default function SiteHeader() {
       setIsOverWhite(whiteCount >= 2);
     };
 
-    handleScroll();
+    // On first load, force white text if hero is visible
+    if (window.scrollY < 100) {
+      setIsOverWhite(false);
+    } else {
+      handleScroll();
+    }
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
     
@@ -81,12 +87,12 @@ export default function SiteHeader() {
   }, []);
 
   return (
-    <header className="fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[95%] max-w-[1400px] transition-all duration-500">
-      <div className="flex items-center justify-between">
+    <header className="fixed top-2 left-1/2 z-50 -translate-x-1/2 w-[95%] max-w-[1400px] transition-all duration-500">
+      <div className="flex items-center justify-between h-[44px] md:h-[52px] xl:h-[60px]">
         {/* Logo */}
-        <div className="flex items-center h-[56px]">
+        <div className="flex items-center h-full min-h-0">
           <Image
-            src={isOverWhite ? "/logo-black.png" : "/logo-white.png"}
+            src={isOverWhite ? "/logo-white.png" : "/logo-white.png"}
             alt="Logo"
             width={180}
             height={80}
@@ -97,14 +103,14 @@ export default function SiteHeader() {
 
         {/* CENTER NAV - Desktop Only */}
         <nav
-          className="hidden lg:flex items-center gap-4 xl:gap-8 2xl:gap-10 px-4 xl:px-8 2xl:px-10 py-3 xl:py-4 rounded-2xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition-all duration-500 bg-white/10 border border-white/15"
+          className="hidden lg:flex items-center gap-4 xl:gap-8 2xl:gap-10 px-2 xl:px-6 2xl:px-8 h-full rounded-2xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition-all duration-500 bg-white/10 border border-white/15 min-h-0"
         >
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
               className={`text-sm xl:text-base 2xl:text-lg font-semibold tracking-wide transition-colors duration-300 whitespace-nowrap ${
-                isOverWhite ? "!text-gray-900 hover:!text-[#849826]" : "!text-white hover:!text-white/90"
+                isOverWhite ? "!text-gray-900 hover:!text-[#849826]" : "!text-white hover:!text-white/90 !important"
               }`}
             >
               {item.label}
@@ -113,15 +119,15 @@ export default function SiteHeader() {
         </nav>
 
         {/* RIGHT ACTIONS - Desktop */}
-        <div className="hidden lg:flex items-center gap-3 xl:gap-4">
+        <div className="hidden lg:flex items-center gap-2 xl:gap-3 h-full min-h-0">
           {/* Phone */}
-          <div className="flex items-center gap-2 xl:gap-3 px-3 xl:px-5 py-2 xl:py-3 rounded-2xl backdrop-blur-xl transition-all duration-500 bg-white/10 border border-white/15">
+          <div className="flex items-center gap-2 xl:gap-3 px-2 xl:px-4 h-full rounded-2xl backdrop-blur-xl transition-all duration-500 bg-white/10 border border-white/15 min-h-0">
             <div className="flex h-8 w-8 xl:h-10 xl:w-10 items-center justify-center rounded-full bg-[#849826]">
               <Phone size={16} className="!text-white xl:hidden" />
               <Phone size={18} className="!text-white hidden xl:block" />
             </div>
             <span className={`text-sm xl:text-base font-semibold whitespace-nowrap transition-colors duration-300 ${
-              isOverWhite ? "!text-gray-900" : "!text-white"
+              isOverWhite ? "!text-gray-900" : "!text-white !important"
             }`}>
               +001 6520 698 00
             </span>
@@ -130,7 +136,7 @@ export default function SiteHeader() {
           {/* BOOK NOW */}
           <Link
             href="/contact"
-            className="px-4 xl:px-7 py-2 xl:py-3 rounded-2xl bg-[#849826] !text-white text-sm xl:text-base font-bold shadow-lg shadow-[#849826]/30 hover:brightness-110 transition-all duration-300 whitespace-nowrap"
+            className="px-3 xl:px-5 h-full flex items-center rounded-2xl bg-[#849826] !text-white text-sm xl:text-base font-bold shadow-lg shadow-[#849826]/30 hover:brightness-110 transition-all duration-300 whitespace-nowrap min-h-0"
           >
             BOOK NOW
           </Link>

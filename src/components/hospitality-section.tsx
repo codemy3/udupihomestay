@@ -5,34 +5,39 @@ import { Play } from 'lucide-react';
 
 export default function HospitalitySection() {
   return (
-    <section className="relative py-16 md:py-24 px-4 md:px-8 lg:px-16 overflow-hidden" style={{ backgroundColor: '#f8f7f4' }}>
+    <section className="relative w-full py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 lg:px-12 overflow-hidden" style={{ backgroundColor: '#f8f7f4' }}>
       <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
           
-          {/* Left Side - Image */}
+          {/* Left Side - Video */}
           <motion.div
-            initial={{ opacity: 0, x: -60 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative"
+            className="relative order-2 lg:order-1"
           >
-            <div className="relative">
-              <img
-                src="/reception.jpg"
-                alt="Hotel Reception"
-                className="w-full h-auto object-cover rounded-lg shadow-lg"
-              />
+            <div className="relative h-full min-h-[300px] sm:min-h-[350px] md:min-h-[450px] lg:min-h-[550px] rounded-lg overflow-hidden">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover shadow-lg"
+              >
+                <source src="/video/hospitality-video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </motion.div>
 
           {/* Right Side - Content */}
           <motion.div
-            initial={{ opacity: 0, x: 60 }}
+            initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-6 lg:pl-8"
+            className="flex flex-col justify-center order-1 lg:order-2 lg:pl-6 xl:pl-12"
           >
             {/* Eyebrow Text */}
             <motion.span
@@ -40,7 +45,7 @@ export default function HospitalitySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-block text-sm md:text-base font-medium tracking-[0.2em] uppercase"
+              className="inline-block text-xs md:text-sm font-medium tracking-[0.25em] uppercase mb-3 md:mb-4"
               style={{ color: '#849826' }}
             >
               The Heart of Hospitality
@@ -52,9 +57,9 @@ export default function HospitalitySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-serif leading-tight text-gray-900"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif leading-tight text-gray-900 mb-4 md:mb-6"
             >
-              Welcome To a World of <br className="hidden md:block" /> Warmth & Elegance
+              Welcome To a World of Warmth & Elegance
             </motion.h2>
 
             {/* Description */}
@@ -63,7 +68,7 @@ export default function HospitalitySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-gray-600 text-base md:text-lg leading-relaxed"
+              className="text-sm md:text-base lg:text-lg text-gray-600 leading-relaxed mb-6 md:mb-8"
             >
               Discover the charm of Udupi through authentic homestay experiences. Nestled in the heart of coastal Karnataka, 
               our carefully curated homestays offer you a perfect blend of traditional hospitality and modern comfort. 
@@ -77,39 +82,39 @@ export default function HospitalitySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="relative pt-8"
+              className="relative pt-4 md:pt-6"
             >
               {/* Decorative Background */}
               <div 
-                className="absolute inset-0 rounded-xl opacity-10"
+                className="absolute inset-0 rounded-xl opacity-25"
                 style={{
                   background: 'radial-gradient(circle at center, #849826 0%, transparent 70%)',
                 }}
               />
               
-              <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-6 rounded-xl">
+              <div className="relative flex flex-row items-center gap-3 md:gap-4 p-4 md:p-5 rounded-xl flex-wrap sm:flex-nowrap">
                 {/* Know More Button */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-3.5 text-white font-medium rounded-md shadow-lg hover:shadow-xl transition-all duration-300 uppercase tracking-wide text-sm"
+                  className="px-6 py-2.5 text-white font-semibold rounded-md shadow-lg hover:shadow-xl transition-all duration-300 uppercase tracking-wide text-xs md:text-sm whitespace-nowrap flex-shrink-0"
                   style={{ backgroundColor: '#849826' }}
                 >
-                  Know more about us
+                  Know More
                 </motion.button>
                 
-                {/* View Reels Button with Play Icon */}
-                <div className="flex items-center gap-3">
-                  <span className="text-gray-700 font-medium uppercase tracking-wide text-sm">
-                    view reels
+                {/* View More Videos Button with Play Icon */}
+                <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                  <span className="text-gray-700 font-semibold uppercase tracking-wide text-xs md:text-sm whitespace-nowrap">
+                    View Videos
                   </span>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-12 h-12 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 relative group"
+                    className="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 relative flex-shrink-0"
                     style={{ backgroundColor: '#849826' }}
                   >
-                    <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                    <Play className="w-4 md:w-5 h-4 md:h-5 text-white fill-white ml-0.5" />
                     {/* Ripple effect */}
                     <span className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ backgroundColor: '#849826' }} />
                   </motion.button>
