@@ -89,7 +89,7 @@ export default function HomestaysHorizontalScroll() {
       id="homestays-section"
       className="relative bg-cover bg-center bg-no-repeat bg-fixed"
       style={{
-        backgroundImage: "url(/view/V4.webp)",
+        backgroundImage: "url(/view/2.webp)",
         backgroundColor: "#f8f7f4",
       }}
     >
@@ -119,14 +119,15 @@ export default function HomestaysHorizontalScroll() {
             return (
               <div
                 key={homestay.id}
-                className={`relative shrink-0 rounded-2xl border border-white/20 transition-all duration-500 ${
+                className={`relative shrink-0 rounded-full border border-white/20 transition-all duration-500 overflow-hidden ${
                   isCenter
                     ? "shadow-[0_25px_80px_rgba(0,0,0,0.5)]"
                     : "shadow-[0_15px_50px_rgba(0,0,0,0.3)]"
                 }`}
                 style={{
                   width: isMobile ? "320px" : "550px",
-                  opacity: isCenter ? 1 : 0.7,
+                  opacity: isCenter ? 1 : 0.9,
+                  borderRadius: '32px',
                 }}
               >
                 <div
