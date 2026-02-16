@@ -10,7 +10,20 @@ import {
   Waves,
   Shield,
   Home,
-  Armchair
+  Armchair,
+  Heart,
+  TreePine,
+  Film,
+  BatteryCharging,
+  Briefcase,
+  Baby,
+  Users,
+  Image,
+  Globe,
+  Train,
+  Hospital,
+  Building,
+  Hotel
 } from "lucide-react";
 
 export default function AboutPage() {
@@ -244,34 +257,29 @@ export default function AboutPage() {
       </section>
 
       {/* ================= STATS COUNTER ================= */}
-      <section className="py-12 sm:py-16 bg-[#f8f8f8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-10 bg-[#f8f8f8]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             data-animate="stats"
-            className={`grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center animate-stagger ${visibleSections.has('stats') ? 'visible' : ''}`}
+            className={`grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 text-center animate-stagger ${visibleSections.has('stats') ? 'visible' : ''}`}
           >
-            <div className="space-y-2 sm:space-y-3">
-              <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#849826] font-serif">
-                15+
-              </div>
-              <p className="text-gray-700 font-medium text-sm sm:text-base">Premium Properties</p>
-              <p className="text-xs sm:text-sm text-gray-500">Curated homestays across Udupi</p>
+            {/* Premium Properties */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="text-5xl sm:text-6xl font-bold font-serif text-[#849826] mb-2">15+</div>
+              <p className="text-[#2c2c2c] font-semibold text-base sm:text-lg mb-1">Premium Properties</p>
+              <p className="text-gray-500 text-xs sm:text-sm">Curated homestays across Udupi</p>
             </div>
-
-            <div className="space-y-2 sm:space-y-3">
-              <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#849826] font-serif">
-                2500+
-              </div>
-              <p className="text-gray-700 font-medium text-sm sm:text-base">Happy Guests</p>
-              <p className="text-xs sm:text-sm text-gray-500">Memorable stays delivered</p>
+            {/* Happy Guests */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="text-5xl sm:text-6xl font-bold font-serif text-[#849826] mb-2">2500+</div>
+              <p className="text-[#2c2c2c] font-semibold text-base sm:text-lg mb-1">Happy Guests</p>
+              <p className="text-gray-500 text-xs sm:text-sm">Memorable stays delivered</p>
             </div>
-
-            <div className="space-y-2 sm:space-y-3">
-              <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#849826] font-serif">
-                8+
-              </div>
-              <p className="text-gray-700 font-medium text-sm sm:text-base">Years Experience</p>
-              <p className="text-xs sm:text-sm text-gray-500">In hospitality excellence</p>
+            {/* Years Experience */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="text-5xl sm:text-6xl font-bold font-serif text-[#849826] mb-2">8+</div>
+              <p className="text-[#2c2c2c] font-semibold text-base sm:text-lg mb-1">Years Experience</p>
+              <p className="text-gray-500 text-xs sm:text-sm">In hospitality excellence</p>
             </div>
           </div>
         </div>
@@ -280,39 +288,21 @@ export default function AboutPage() {
       {/* ================= SERVICES & FACILITIES ================= */}
       <section 
         className="py-16 sm:py-20 md:py-32 relative overflow-hidden"
-        style={{
-          backgroundImage: 'url(/view/3.webp)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
       >
-        <div className="absolute inset-0 bg-black/70" />
+        {/* Background Video */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src="/video/HillTop.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <div className="absolute inset-0 bg-black/70 z-10" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-20">
           
-          {/* Service Icons Grid */}
-          <div 
-            data-animate="services-icons"
-            className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 mb-12 sm:mb-16 animate-fade-up ${visibleSections.has('services-icons') ? 'visible' : ''}`}
-          >
-            {[
-              { icon: <Snowflake className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Air Condition" },
-              { icon: <Wifi className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Speed Internet" },
-              { icon: <Lock className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Smart Lock" },
-              { icon: <Dumbbell className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Gym Center" },
-              { icon: <UtensilsCrossed className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Breakfast" },
-              { icon: <Waves className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Swimming Pool" },
-            ].map((service, i) => (
-              <div key={i} className="text-center group cursor-pointer">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto border-2 border-[#849826]/40 flex items-center justify-center mb-2 sm:mb-3 group-hover:border-[#849826] group-hover:scale-110 transition-all duration-300 text-white/80 group-hover:text-white">
-                  {service.icon}
-                </div>
-                <p className="text-[10px] sm:text-xs text-white/70 group-hover:text-white transition-colors uppercase tracking-wide">
-                  {service.label}
-                </p>
-              </div>
-            ))}
-          </div>
+
 
           {/* Section Header */}
           <div 
@@ -327,39 +317,33 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          {/* Service Cards */}
+          {/* Service Cards (transparent, curved, no icons) */}
           <div 
             data-animate="services-cards"
             className={`grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto animate-stagger ${visibleSections.has('services-cards') ? 'visible' : ''}`}
           >
             {[
               {
-                icon: <Shield className="w-10 h-10 sm:w-12 sm:h-12" />,
                 title: "ROOM SECURITY",
                 desc: "Secure lock systems and 24/7 monitoring for your peace of mind.",
               },
               {
-                icon: <Home className="w-10 h-10 sm:w-12 sm:h-12" />,
                 title: "FULL AMENITIES",
                 desc: "Premium bedding, AC, and all essential comforts included.",
               },
               {
-                icon: <Armchair className="w-10 h-10 sm:w-12 sm:h-12" />,
                 title: "COMFORTABLE ROOMS",
                 desc: "Spacious interiors with elegant traditional-modern design.",
               },
             ].map((service, i) => (
               <div 
                 key={i} 
-                className="bg-white text-[#2c2c2c] px-6 py-10 sm:px-8 sm:py-12 text-center group hover:shadow-2xl transition-all duration-500 border-t-4 border-transparent hover:border-[#849826]"
+                className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl text-white px-6 py-10 sm:px-8 sm:py-12 text-center group hover:shadow-2xl transition-all duration-500"
               >
-                <div className="text-[#849826] mb-5 sm:mb-6 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 inline-block">
-                  {service.icon}
-                </div>
-                <h3 className="font-serif text-base sm:text-lg font-semibold mb-4 sm:mb-5 uppercase tracking-wider text-[#2c2c2c]">
+                <h3 className="font-serif text-base sm:text-lg font-semibold mb-4 sm:mb-5 uppercase tracking-wider">
                   {service.title}
                 </h3>
-                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8">
+                <p className="text-white/80 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8">
                   {service.desc}
                 </p>
                 <button className="text-[#849826] text-xs sm:text-sm font-normal flex items-center gap-2 mx-auto group-hover:gap-4 transition-all">
@@ -369,65 +353,36 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ================= KARNATAKA TOURISM ================= */}
-      <section className="py-16 sm:py-20 md:py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center">
-            
-            <div 
-              data-animate="karnataka-img"
-              className={`order-2 lg:order-1 animate-scale ${visibleSections.has('karnataka-img') ? 'visible' : ''}`}
-            >
-              <div className="relative">
-                <img
-                  src="/karntaka.webp"
-                  alt="Karnataka Tourism"
-                  className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover shadow-2xl"
-                />
-                <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 w-full h-full border-2 sm:border-4 border-[#849826]/30 -z-10" />
-              </div>
-            </div>
-
-            <div 
-              data-animate="karnataka-text"
-              className={`order-1 lg:order-2 space-y-4 sm:space-y-6 animate-fade-right ${visibleSections.has('karnataka-text') ? 'visible' : ''}`}
-            >
-              <div>
-                <p className="text-[#849826] text-xs sm:text-sm tracking-[0.2em] uppercase mb-3 sm:mb-4 font-medium">
-                  Official Recognition
-                </p>
-                <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight mb-4 sm:mb-6">
-                  Honored by
-                  <br />
-                  <span className="text-[#849826] italic">Karnataka Tourism</span>
-                </h2>
-                <p className="font-serif text-lg sm:text-xl text-[#849826] italic mb-4 sm:mb-6">
-                  One State Many Worlds
+          {/* Service Icons Grid (moved after cards, with new facilities) */}
+          <div 
+            data-animate="services-icons"
+            className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 mt-12 sm:mt-16 animate-fade-up ${visibleSections.has('services-icons') ? 'visible' : ''}`}
+          >
+            {[
+              { icon: <Snowflake className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Air Condition" },
+              { icon: <Wifi className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Speed Internet" },
+              { icon: <Lock className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Smart Lock" },
+              { icon: <Dumbbell className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Gym Center" },
+              { icon: <UtensilsCrossed className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Breakfast" },
+              { icon: <Waves className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Swimming Pool" },
+              // New facilities below (use placeholder icons for now)
+              { icon: <Heart className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Health" },
+              { icon: <TreePine className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Outdoor Amenities" },
+              { icon: <Film className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Theatre Room" },
+              { icon: <Users className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Multi Purpose Hall" },
+              { icon: <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Executive Lounge" },
+              { icon: <Baby className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />, label: "Kid’s Play Area" },
+            ].map((service, i) => (
+              <div key={i} className="text-center group cursor-pointer">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto border-2 border-[#849826]/40 flex items-center justify-center mb-2 sm:mb-3 group-hover:border-[#849826] group-hover:scale-110 transition-all duration-300 text-white/80 group-hover:text-white">
+                  {service.icon}
+                </div>
+                <p className="text-[10px] sm:text-xs text-white/70 group-hover:text-white transition-colors uppercase tracking-wide">
+                  {service.label}
                 </p>
               </div>
-
-              <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-                Recognized for our commitment to authentic hospitality and cultural preservation.
-              </p>
-
-              <div className="space-y-3 sm:space-y-4 pt-6 sm:pt-8">
-                {[
-                  "Official Tourism Partner",
-                  "Excellence in Hospitality",
-                  "Cultural Preservation Award",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 sm:gap-4 group">
-                    <div className="w-10 sm:w-12 h-[2px] bg-[#849826] group-hover:w-12 sm:group-hover:w-16 transition-all duration-300" />
-                    <span className="text-gray-700 group-hover:text-[#849826] transition-colors text-sm sm:text-base">
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
