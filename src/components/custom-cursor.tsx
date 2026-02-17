@@ -130,6 +130,21 @@ export default function CustomCursor() {
       const handleMouseMove = (e: MouseEvent) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        // Always show cursor on movement
+        gsap.to([outerEl, innerEl, dotsEl], {
+          opacity: 1,
+          duration: 0.2,
+          overwrite: true,
+        });
+
+        // Universal fallback: force cursor elements visible/displayed
+        [outerEl, innerEl, dotsEl].forEach(el => {
+          if (el) {
+            el.style.opacity = '1';
+            el.style.display = 'block';
+            el.style.visibility = 'visible';
+          }
+        });
 
         // Check for magnetic elements
         const magneticElements = document.querySelectorAll('[data-magnetic]');
