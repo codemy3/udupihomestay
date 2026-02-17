@@ -175,12 +175,12 @@ body {
   top: 0;
   width: 40px;
   height: 40px;
-  border: 2px solid #1f1f1f;
+  border: 2px solid #849826;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   will-change: transform, opacity;
-  mix-blend-mode: difference;
+  background: rgba(255,255,255,0.01);
 }
 
 .cursor-inner {
@@ -189,12 +189,17 @@ body {
   top: 0;
   width: 8px;
   height: 8px;
-  background-color: #1f1f1f;
+  background-color: #849826;
   border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
   will-change: transform, opacity;
-  mix-blend-mode: difference;
+}
+
+@media (max-width: 768px) {
+  .cursor-outer, .cursor-inner, .cursor-dots {
+    display: none !important;
+  }
 }
 
 /* Mobile Touch Indicator - Fun & Professional */
@@ -213,7 +218,6 @@ body {
   scale: 0;
   background: radial-gradient(circle at 30% 30%, rgba(31, 31, 31, 0.15), transparent);
   box-shadow: 0 0 12px rgba(31, 31, 31, 0.3), inset 0 0 8px rgba(31, 31, 31, 0.1);
-  mix-blend-mode: difference;
 }
 
 /* Mobile Touch Ripple - Expanding circle on tap */
