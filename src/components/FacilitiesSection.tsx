@@ -1,33 +1,342 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import {
-  Car,
-  Wifi,
-  Bell,
-  Key,
-  Utensils,
-  Waves,
-  Phone,
-} from 'lucide-react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { Car, Wifi, Bell, Key, Utensils, Waves, Phone } from 'lucide-react';
 
 const facilities = [
-  { title: 'Free Car Parking', icon: Car, filled: false },
-  { title: 'Fast Wi-Fi Internet', icon: Wifi, filled: true },
-  { title: 'Room Service', icon: Bell, filled: false },
-  { title: "Smart key's", icon: Key, filled: true },
-  { title: 'Food & Drink', icon: Utensils, filled: false },
-  { title: 'Swimming – Pool', icon: Waves, filled: true },
+  { title: 'Free Car Parking',    icon: Car,       filled: false },
+  { title: 'Fast Wi-Fi Internet', icon: Wifi,      filled: true  },
+  { title: 'Room Service',        icon: Bell,      filled: false },
+  { title: "Smart Key's",         icon: Key,       filled: true  },
+  { title: 'Food & Drink',        icon: Utensils,  filled: false },
+  { title: 'Swimming Pool',       icon: Waves,     filled: true  },
 ];
 
-export default function FacilitiesSection() {
+const stats = [
+  { value: 15,   suffix: '+', label: 'Premium Properties' },
+  { value: 2500, suffix: '+', label: 'Happy Guests'       },
+  { value: 8,    suffix: '+', label: 'Years Experience'   },
+  { value: 98,   suffix: '%', label: 'Satisfaction Rate'  },
+];
+
+/* ── animated counter ── */
+function useCounter(target: number, duration = 1500, active: boolean) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!active) { setCount(0); return; }
+    let cur = 0;
+    const step = target / (duration / 16);
+    const t = setInterval(() => {
+      cur += step;
+      if (cur >= target) { setCount(target); clearInterval(t); }
+      else setCount(Math.floor(cur));
+    }, 16);
+    return () => clearInterval(t);
+  }, [active, target, duration]);
+  return count;
+}
+
+/* ── single stat row inside tag ── */
+function StatRow({ stat, active, index }: { stat: typeof stats[0]; active: boolean; index: number }) {
+  const count = useCounter(stat.value, 1300 + index * 180, active);
   return (
-    <section className="bg-[#fdfbf7] py-8 md:py-20 lg:py-28">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+      transition={{ delay: 0.8 + index * 0.14, duration: 0.4, ease: 'easeOut' }}
+      className="flex flex-col items-center py-3 relative"
+    >
+      {index > 0 && (
+        <div className="absolute top-0 left-4 right-4 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(200,216,74,0.25), transparent)' }} />
+      )}
+      {/* Big serif number */}
+      <div className="font-serif font-bold leading-none tabular-nums text-white"
+        style={{ fontSize: '1.65rem', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+        {count.toLocaleString()}
+        <span style={{ color: '#c8d84a', fontSize: '1.3rem' }}>{stat.suffix}</span>
+      </div>
+      {/* Label */}
+      <div className="mt-1 text-center"
+        style={{ fontSize: '7.5px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', fontWeight: 500, lineHeight: 1.4 }}>
+        {stat.label}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   3D PRICE TAG — hangs from top-right of section
+═══════════════════════════════════════════════ */
+function PriceTag({ active }: { active: boolean }) {
+  return (
+    <AnimatePresence>
+      {active && (
+        /*
+          Outer wrapper: positions tag at top-right, sticking out from the top border.
+          transform-origin at top-center so it swings like a pendulum from the nail.
+        */
+        <motion.div
+          key="price-tag-3d"
+          className="absolute top-0 right-8 xl:right-16 z-30 hidden lg:block"
+          style={{ transformOrigin: 'top center' }}
+          /* ── entrance animation ──
+             starts above (y:-120), slightly tilted (rotateX:-90 looks folded up),
+             then drops + swings with a realistic overshoot
+          */
+          initial={{
+            y: -140,
+            rotateX: -90,
+            rotateZ: -18,
+            opacity: 0,
+            scale: 0.7,
+          }}
+          animate={{
+            y: 0,
+            rotateX: 0,
+            rotateZ: [null, 12, -7, 4, -2, 0],   // pendulum swing settling
+            opacity: 1,
+            scale: 1,
+          }}
+          exit={{
+            y: -140,
+            rotateX: -90,
+            rotateZ: -18,
+            opacity: 0,
+            scale: 0.7,
+            transition: { duration: 0.45, ease: 'easeIn' },
+          }}
+          transition={{
+            y:        { type: 'spring', stiffness: 120, damping: 10, mass: 1.4 },
+            rotateX:  { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+            rotateZ:  { duration: 1.4, ease: 'easeOut', times: [0, 0.25, 0.5, 0.7, 0.85, 1] },
+            opacity:  { duration: 0.3 },
+            scale:    { type: 'spring', stiffness: 180, damping: 18 },
+          }}
+        >
+          {/* ── perspective container for 3D depth ── */}
+          <div style={{ perspective: '600px', perspectiveOrigin: 'top center' }}>
+            <motion.div
+              style={{ transformStyle: 'preserve-3d' }}
+              /* subtle continuous gentle sway once settled */
+              animate={{ rotateZ: [0, 1.5, 0, -1.5, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
+            >
+
+              {/* ── NAIL / PIN at the very top of section ── */}
+              <div className="flex flex-col items-center" style={{ transformOrigin: 'top center' }}>
+
+                {/* Nail head (sits on top border of section) */}
+                <div
+                  className="relative flex-shrink-0"
+                  style={{
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle at 38% 35%, #e8e0c8, #b8a060 55%, #6b5a2a)',
+                    boxShadow: '0 3px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.3)',
+                    zIndex: 10,
+                  }}
+                />
+
+                {/* String from nail to hole */}
+                <div
+                  style={{
+                    width: '1.5px',
+                    height: '22px',
+                    background: 'linear-gradient(to bottom, #b8965a, #c8a84a88)',
+                    boxShadow: '0 0 3px rgba(184,150,90,0.4)',
+                  }}
+                />
+
+                {/* ── HOLE ring ── */}
+                <div
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    border: '2.5px solid #c8a84a',
+                    background: 'radial-gradient(circle at 40% 35%, #e8e4d8, #fdfbf7)',
+                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2)',
+                    flexShrink: 0,
+                  }}
+                />
+
+                {/* Short string into tag body */}
+                <div
+                  style={{
+                    width: '1.5px',
+                    height: '10px',
+                    background: 'linear-gradient(to bottom, #c8a84a88, #c8a84a)',
+                  }}
+                />
+
+                {/* ══════════════════════════════
+                    TAG BODY
+                    - clip-path: pointed bottom (classic price tag)
+                    - layered background for 3D face effect
+                    - left/right edge shadows simulate thickness
+                ══════════════════════════════ */}
+                <div
+                  className="relative"
+                  style={{
+                    width: '110px',
+                    /* bottom V-notch */
+                    clipPath: 'polygon(0% 0%, 100% 0%, 100% calc(100% - 22px), 50% 100%, 0% calc(100% - 22px))',
+                    background: `
+                      linear-gradient(160deg,
+                        #2a3318 0%,
+                        #1e2810 40%,
+                        #253015 70%,
+                        #1a1e0c 100%
+                      )
+                    `,
+                    paddingBottom: '32px',
+                    /* 3D depth shadows */
+                    boxShadow: `
+                      -6px 8px 24px rgba(0,0,0,0.55),
+                       4px 4px 12px rgba(0,0,0,0.3),
+                      inset 1px 0 0 rgba(255,255,255,0.06),
+                      inset -1px 0 0 rgba(0,0,0,0.3)
+                    `,
+                  }}
+                >
+                  {/* ── Grain texture ── */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      opacity: 0.06,
+                      backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+                      backgroundSize: '200px',
+                    }}
+                  />
+
+                  {/* ── Left highlight edge (3D light source) ── */}
+                  <div
+                    className="absolute top-0 bottom-0 left-0 w-[2px]"
+                    style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.12), transparent 60%)' }}
+                  />
+                  {/* ── Right shadow edge ── */}
+                  <div
+                    className="absolute top-0 bottom-0 right-0 w-[2px]"
+                    style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 60%)' }}
+                  />
+
+                  {/* ── Top gold border ── */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-px"
+                    style={{ background: 'linear-gradient(90deg, transparent, #849826, #c8d84a, #849826, transparent)' }}
+                  />
+
+                  {/* ── Subtle dot grid watermark ── */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      opacity: 0.04,
+                      backgroundImage: 'radial-gradient(circle, #c8d84a 1px, transparent 1px)',
+                      backgroundSize: '14px 14px',
+                    }}
+                  />
+
+                  {/* ── "UDUPI HOMESTAYS" faint watermark diagonal ── */}
+                  <div
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+                    style={{ opacity: 0.06 }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '7px',
+                        letterSpacing: '0.4em',
+                        textTransform: 'uppercase',
+                        color: '#c8d84a',
+                        fontWeight: 700,
+                        writingMode: 'vertical-rl',
+                        transform: 'rotate(180deg)',
+                      }}
+                    >
+                      UDUPI HOMESTAYS
+                    </span>
+                  </div>
+
+                  {/* ── Stats content ── */}
+                  <div className="relative z-10 px-3 pt-3">
+                    {/* Small eyebrow */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={active ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ delay: 0.75 }}
+                      className="flex items-center gap-1.5 mb-1"
+                    >
+                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.3)' }} />
+                      <span style={{
+                        fontSize: '6px',
+                        letterSpacing: '0.3em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(200,216,74,0.55)',
+                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                      }}>
+                        Our Numbers
+                      </span>
+                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.3)' }} />
+                    </motion.div>
+
+                    {stats.map((s, i) => (
+                      <StatRow key={i} stat={s} active={active} index={i} />
+                    ))}
+
+                    {/* Bottom "Est." label */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={active ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ delay: 1.5 }}
+                      className="flex items-center gap-1.5 mt-1"
+                    >
+                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.2)' }} />
+                      <span style={{
+                        fontSize: '6px',
+                        letterSpacing: '0.3em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(255,255,255,0.2)',
+                        fontWeight: 500,
+                      }}>
+                        Est. 2017
+                      </span>
+                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.2)' }} />
+                    </motion.div>
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ═══════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════ */
+export default function FacilitiesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView   = useInView(sectionRef, { once: false, margin: '-5% 0px -5% 0px' });
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative bg-[#fdfbf7] py-8 md:py-20 lg:py-28 overflow-visible"
+    >
+      {/* 3D Price tag anchored to top-right */}
+      <PriceTag active={isInView} />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-20 lg:items-center gap-8 md:gap-12">
 
-          {/* LEFT – FACILITY GRID (2x3 on mobile, 3x2 on desktop) */}
-          <motion.div 
+          {/* LEFT – FACILITY GRID */}
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -36,8 +345,6 @@ export default function FacilitiesSection() {
           >
             {facilities.map((item, index) => {
               const Icon = item.icon;
-              const filled = item.filled;
-
               return (
                 <motion.div
                   key={index}
@@ -47,27 +354,18 @@ export default function FacilitiesSection() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -5 }}
                   className={`flex flex-col items-center justify-center rounded-xl md:rounded-2xl p-3 sm:p-6 md:p-8 text-center transition-all duration-300 cursor-pointer
-                    ${
-                      filled
-                        ? 'bg-[#849826] text-white shadow-lg'
-                        : 'border-2 border-[#d4c5a0] bg-white text-[#1f1f1f] hover:border-[#849826]'
-                    }
-                  `}
-                  style={{
-                    minHeight: '120px',
-                  }}
+                    ${item.filled
+                      ? 'bg-[#849826] text-white shadow-lg'
+                      : 'border-2 border-[#d4c5a0] bg-white text-[#1f1f1f] hover:border-[#849826]'
+                    }`}
+                  style={{ minHeight: '120px' }}
                 >
                   <Icon
                     size={24}
                     strokeWidth={1.5}
-                    className={`mb-2 sm:mb-4 md:mb-3 ${filled ? 'text-white' : 'text-[#849826]'}`}
+                    className={`mb-2 sm:mb-4 md:mb-3 ${item.filled ? 'text-white' : 'text-[#849826]'}`}
                   />
-
-                  <p
-                    className={`text-xs sm:text-base font-medium leading-tight ${
-                      filled ? 'text-white' : 'text-[#1f1f1f]'
-                    }`}
-                  >
+                  <p className={`text-xs sm:text-base font-medium leading-tight ${item.filled ? 'text-white' : 'text-[#1f1f1f]'}`}>
                     {item.title}
                   </p>
                 </motion.div>
@@ -76,14 +374,14 @@ export default function FacilitiesSection() {
           </motion.div>
 
           {/* RIGHT – CONTENT */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex flex-col justify-center lg:pl-8 order-1 lg:order-2"
           >
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -93,17 +391,17 @@ export default function FacilitiesSection() {
               Our Best Facilities
             </motion.p>
 
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mb-4 md:mb-6 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-[#1f1f1f]"
             >
-              Our Facilities & Amenities
+              Our Facilities &amp; Amenities
             </motion.h2>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -111,21 +409,20 @@ export default function FacilitiesSection() {
               className="mb-6 md:mb-10 text-[#5f5f5f] leading-relaxed text-sm sm:text-base md:text-lg"
             >
               Welcome to Udupi Homestays, your trusted platform for discovering and
-              booking the best homestays in Udupi. Since our journey
-              began, we've been committed to making travel easier, more
-              comfortable, and affordable for everyone.
+              booking the best homestays in Udupi. Since our journey began, we've been
+              committed to making travel easier, more comfortable, and affordable for
+              everyone.
             </motion.p>
 
             {/* CTA ROW */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
             >
-              {/* Phone Button */}
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4 rounded-lg md:rounded-xl bg-white px-4 sm:px-6 py-3 sm:py-4 shadow-md border border-gray-100 cursor-pointer"
               >
@@ -137,8 +434,7 @@ export default function FacilitiesSection() {
                 </span>
               </motion.div>
 
-              {/* Book Now Button */}
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
                 className="rounded-lg md:rounded-xl bg-[#849826] px-6 sm:px-10 py-3 sm:py-4 font-semibold text-white transition-all duration-300 shadow-md hover:shadow-lg uppercase tracking-wide text-xs sm:text-base"

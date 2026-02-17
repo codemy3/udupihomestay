@@ -12,7 +12,7 @@ export default function SiteFooter() {
       
       <div className="relative">
         {/* Newsletter Section - Golden/Beige Background */}
-        <div className="bg-[#849826] mx-auto max-w-[1400px] rounded-[20px] px-4 sm:px-6 md:px-12 py-6 md:py-10 -mb-12 md:-mb-16 mt-0 mx-4 sm:mx-6 xl:mx-12">
+        <div className="bg-[#849826] mx-auto max-w-[1400px] rounded-[20px] px-4 sm:px-6 md:px-12 py-6 md:py-10 -mb-12 md:-mb-16 mt-4 mx-4 sm:mx-6 xl:mx-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
             <div className="text-center md:text-left w-full md:max-w-[500px]">
               <h2 className="text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[42px] font-serif text-white leading-tight mb-2 md:mb-3">

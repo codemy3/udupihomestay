@@ -19,7 +19,6 @@ import {
 export default function AboutPage() {
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const [counters, setCounters] = useState({ properties: 0, guests: 0, years: 0 });
-  const [hasAnimated, setHasAnimated] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
@@ -61,12 +60,9 @@ export default function AboutPage() {
           if (!id) return;
 
           if (entry.isIntersecting) {
-            // Add to visible sections
             setVisibleSections(prev => new Set([...prev, id]));
             
-            // Trigger counter animation when stats section becomes visible
             if (id === 'stats') {
-              // Reset counters first
               setCounters({ properties: 0, guests: 0, years: 0 });
               setTimeout(() => {
                 animateCounter(15, 'properties', 2000);
@@ -75,7 +71,6 @@ export default function AboutPage() {
               }, 200);
             }
           } else {
-            // Remove from visible sections when out of view
             setVisibleSections(prev => {
               const newSet = new Set(prev);
               newSet.delete(id);
@@ -350,63 +345,35 @@ export default function AboutPage() {
           transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* First row - spread from center */
-        .spread-cards > *:nth-child(1) {
-          transform: translate(100%, 0) scale(0.8);
-        }
-        .spread-cards > *:nth-child(2) {
-          transform: translate(0, 0) scale(0.8);
-        }
-        .spread-cards > *:nth-child(3) {
-          transform: translate(-100%, 0) scale(0.8);
-        }
+        .spread-cards > *:nth-child(1) { transform: translate(100%, 0) scale(0.8); }
+        .spread-cards > *:nth-child(2) { transform: translate(0, 0) scale(0.8); }
+        .spread-cards > *:nth-child(3) { transform: translate(-100%, 0) scale(0.8); }
+        .spread-cards > *:nth-child(4) { transform: translate(100%, 0) scale(0.8); }
+        .spread-cards > *:nth-child(5) { transform: translate(0, 0) scale(0.8); }
+        .spread-cards > *:nth-child(6) { transform: translate(-100%, 0) scale(0.8); }
 
-        /* Second row - spread from center */
-        .spread-cards > *:nth-child(4) {
-          transform: translate(100%, 0) scale(0.8);
-        }
-        .spread-cards > *:nth-child(5) {
-          transform: translate(0, 0) scale(0.8);
-        }
-        .spread-cards > *:nth-child(6) {
-          transform: translate(-100%, 0) scale(0.8);
-        }
+        .spread-cards.visible > *:nth-child(1) { opacity:1; transform:translate(0,0) scale(1); transition-delay:0.1s; }
+        .spread-cards.visible > *:nth-child(2) { opacity:1; transform:translate(0,0) scale(1); transition-delay:0.2s; }
+        .spread-cards.visible > *:nth-child(3) { opacity:1; transform:translate(0,0) scale(1); transition-delay:0.3s; }
+        .spread-cards.visible > *:nth-child(4) { opacity:1; transform:translate(0,0) scale(1); transition-delay:0.4s; }
+        .spread-cards.visible > *:nth-child(5) { opacity:1; transform:translate(0,0) scale(1); transition-delay:0.5s; }
+        .spread-cards.visible > *:nth-child(6) { opacity:1; transform:translate(0,0) scale(1); transition-delay:0.6s; }
 
-        /* When visible - all cards move to their final positions */
-        .spread-cards.visible > *:nth-child(1) {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-          transition-delay: 0.1s;
-        }
-        .spread-cards.visible > *:nth-child(2) {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-          transition-delay: 0.2s;
-        }
-        .spread-cards.visible > *:nth-child(3) {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-          transition-delay: 0.3s;
-        }
-        .spread-cards.visible > *:nth-child(4) {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-          transition-delay: 0.4s;
-        }
-        .spread-cards.visible > *:nth-child(5) {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-          transition-delay: 0.5s;
-        }
-        .spread-cards.visible > *:nth-child(6) {
-          opacity: 1;
-          transform: translate(0, 0) scale(1);
-          transition-delay: 0.6s;
+        /* ── WHO WE ARE: ensure top alignment ── */
+        .who-grid {
+          align-items: flex-start;
         }
       `}</style>
 
-      {/* ═══════════════ HERO ═══════════════ */}
-      <section className="relative h-[60vh] sm:h-[70vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+      {/* ═══════════════ HERO — REDUCED HEIGHT ═══════════════ */}
+      {/* 
+        CHANGES:
+        - Mobile:  h-[36vh] min-h-[260px]  (was h-[60vh] min-h-[450px])
+        - Tablet:  sm:h-[42vh]             (was sm:h-[70vh])
+        - Desktop: md:h-[48vh]             (new cap)
+        - Removed py padding inside hero so content fills height cleanly
+      */}
+      <section className="relative h-[36vh] sm:h-[42vh] md:h-[48vh] min-h-[260px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0"
           style={{
@@ -417,12 +384,12 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         </div>
         <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto fade-up visible">
-          <div className="mb-5 flex items-center justify-center gap-3">
+          <div className="mb-4 flex items-center justify-center gap-3">
             <div className="h-px w-10 bg-white/40" />
             <p className="text-xs tracking-[0.3em] uppercase font-light">About Us</p>
             <div className="h-px w-10 bg-white/40" />
           </div>
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold mb-5 leading-tight">ABOUT US</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold mb-4 leading-tight">ABOUT US</h1>
           <div className="flex items-center justify-center gap-2 text-xs sm:text-sm">
             <span className="text-white/80">HOME</span>
             <span className="text-[#849826]">›</span>
@@ -432,7 +399,14 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════ WHO WE ARE ═══════════════ */}
-      <section className="py-16 sm:py-20 md:py-32 bg-white relative overflow-hidden">
+      {/*
+        CHANGES:
+        - Removed extra top/bottom padding: was py-16 sm:py-20 md:py-32, now py-12 sm:py-16 md:py-20
+        - Added who-grid class so both columns align to the top (align-items: flex-start)
+        - Removed mt-8 lg:mt-0 on right column — both columns now start at the same vertical position
+        - Removed space-y-5 excessive gap replaced with tighter space-y-4
+      */}
+      <section className="py-12 sm:py-16 md:py-20 bg-white relative overflow-hidden">
         {/* Parallax background pattern */}
         <div 
           className="absolute inset-0 opacity-[0.02]"
@@ -444,9 +418,11 @@ export default function AboutPage() {
         />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* who-grid ensures align-items: flex-start so both columns top-align */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 who-grid">
 
-            <div data-animate="who-left" className={`space-y-5 fade-left ${visibleSections.has('who-left') ? 'visible' : ''}`}>
+            {/* LEFT COLUMN */}
+            <div data-animate="who-left" className={`space-y-4 fade-left ${visibleSections.has('who-left') ? 'visible' : ''}`}>
               <p className="text-[#849826] text-xs sm:text-sm tracking-[0.25em] uppercase font-medium">Who We Are?</p>
               <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight">
                 DISCOVER THE BEST LUXURY<br />
@@ -458,13 +434,13 @@ export default function AboutPage() {
               <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
                 Our agents specialize in finding the perfect homes and commercial properties, delivering the best of service at every step.
               </p>
-              <div className="pt-2">
+              <div className="pt-1">
                 <p className="text-xs text-gray-700 mb-1 font-medium">Location:</p>
                 <p className="text-gray-600 text-sm">Udupi, Karnataka, India</p>
               </div>
 
-              {/* Stats inside Who We Are section */}
-              <div data-animate="stats" className={`grid grid-cols-3 gap-6 pt-6 stagger ${visibleSections.has('stats') ? 'visible' : ''}`}>
+              {/* Stats */}
+              <div data-animate="stats" className={`grid grid-cols-3 gap-6 pt-4 stagger ${visibleSections.has('stats') ? 'visible' : ''}`}>
                 <div className="flex flex-col items-center text-center">
                   <div className="text-4xl sm:text-5xl font-bold font-serif text-[#849826] mb-1">
                     {counters.properties}+
@@ -485,20 +461,20 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <button className="mt-4 bg-[#849826] text-white px-8 py-3.5 hover:bg-[#6d7d20] transition-all duration-300 uppercase text-xs tracking-widest font-medium shine-effect">
+              <button className="mt-2 bg-[#849826] text-white px-8 py-3.5 hover:bg-[#6d7d20] transition-all duration-300 uppercase text-xs tracking-widest font-medium shine-effect">
                 LEARN MORE
               </button>
             </div>
 
-            <div data-animate="who-right" className={`relative mt-8 lg:mt-0 fade-right ${visibleSections.has('who-right') ? 'visible' : ''}`}>
-              {/* Image container with AOS fade-up zoom reveal */}
+            {/* RIGHT COLUMN — no top margin so it aligns with left column top */}
+            <div data-animate="who-right" className={`relative fade-right ${visibleSections.has('who-right') ? 'visible' : ''}`}>
               <div className="relative group">
-                {/* Main image with fade-up zoom animation */}
+                {/* Main image */}
                 <div className="image-reveal-container">
                   <img 
                     src="/about-story.webp" 
                     alt="Luxury Homestay" 
-                    className="w-full h-[420px] sm:h-[500px] object-cover shadow-2xl image-reveal" 
+                    className="w-full h-[380px] sm:h-[440px] md:h-[480px] object-cover shadow-2xl image-reveal" 
                   />
                 </div>
 
@@ -516,6 +492,7 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -567,9 +544,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ═══════════════ WHAT MAKES US SPECIAL — CENTER SPREAD ANIMATION ═══════════════ */}
+      {/* ═══════════════ WHAT MAKES US SPECIAL ═══════════════ */}
       <section className="py-16 sm:py-20 md:py-28 bg-[#f8f8f8] relative overflow-hidden">
-        {/* Parallax background pattern */}
         <div 
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -586,69 +562,43 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* 3 Column Grid with center spread animation - Responsive */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div data-animate="why-cards" className={`grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 spread-cards ${visibleSections.has('why-cards') ? 'visible' : ''}`}>
             {cards.map((card, i) => (
               <div 
                 key={i}
                 className="group relative bg-white rounded-xl lg:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-700 border border-[#849826]/10 hover:border-[#849826]/30"
-                style={{
-                  transitionDelay: `${i * 0.1}s`
-                }}
+                style={{ transitionDelay: `${i * 0.1}s` }}
               >
-                {/* Image Container */}
                 <div className="relative h-48 sm:h-56 lg:h-72 overflow-hidden">
-                  {/* Image with zoom effect */}
                   <img 
                     src={card.image}
                     alt={card.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  
-                  {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                  
-                  {/* Number badge with glow */}
                   <div className="absolute top-3 right-3 sm:top-4 sm:right-4 lg:top-6 lg:right-6 w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-full bg-[#849826] flex items-center justify-center shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:shadow-[0_0_30px_rgba(132,152,38,0.6)]">
-                    <span className="font-serif text-sm sm:text-lg lg:text-2xl font-bold text-white">
-                      {card.number}
-                    </span>
+                    <span className="font-serif text-sm sm:text-lg lg:text-2xl font-bold text-white">{card.number}</span>
                   </div>
-
-                  {/* Title on image */}
                   <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 lg:bottom-6 lg:left-6 lg:right-6">
                     <h3 className="font-serif text-lg sm:text-xl lg:text-3xl font-bold text-white mb-1 sm:mb-2 transform transition-all duration-500 group-hover:translate-x-2 line-clamp-2">
                       {card.title}
                     </h3>
                     <div className="h-0.5 lg:h-1 w-12 sm:w-14 lg:w-16 bg-[#849826] transition-all duration-500 group-hover:w-16 sm:group-hover:w-20 lg:group-hover:w-24" />
                   </div>
-
-                  {/* Shine effect on hover */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 </div>
-
-                {/* Content */}
                 <div className="p-3 sm:p-4 lg:p-6 bg-white">
                   <p className="text-gray-600 text-xs sm:text-sm lg:text-base leading-relaxed transition-colors duration-300 group-hover:text-gray-800 line-clamp-3">
                     {card.desc}
                   </p>
-                  
-                  {/* Read more with arrow */}
                   <div className="mt-2 sm:mt-3 lg:mt-4 flex items-center gap-1 sm:gap-2 text-[#849826] font-semibold text-xs sm:text-sm transition-all duration-300 group-hover:gap-2 sm:group-hover:gap-3 lg:group-hover:gap-4">
                     <span>Discover More</span>
-                    <svg 
-                      className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-2" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor"
-                    >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </div>
                 </div>
-
-                {/* Decorative corner elements */}
                 <div className="absolute top-0 left-0 w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 border-t-2 border-l-2 border-[#849826]/0 group-hover:border-[#849826]/40 transition-all duration-500" />
                 <div className="absolute bottom-0 right-0 w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 border-b-2 border-r-2 border-[#849826]/0 group-hover:border-[#849826]/40 transition-all duration-500" />
               </div>
@@ -657,26 +607,14 @@ export default function AboutPage() {
         </div>
 
         {/* Stats */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-          <div data-animate="why-stats" className={`grid grid-cols-1 sm:grid-cols-3 gap-6 text-center stagger ${visibleSections.has('why-stats') ? 'visible' : ''}`}>
-            {[["4.9/5","Guest Rating"],["98%","Guest Satisfaction"],["24/7","Support Available"]].map(([val,label],i)=>(
-              <div key={i} className="bg-white p-6 sm:p-8 shadow-md rounded-xl">
-                <div className="text-[#849826] text-3xl sm:text-4xl font-serif font-bold mb-2">{val}</div>
-                <p className="text-gray-600 text-xs sm:text-sm">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        
       </section>
 
-      {/* ═══════════════ OUR PROMISE — ROYAL COMPACT ═══════════════ */}
+      {/* ═══════════════ OUR PROMISE ═══════════════ */}
       <section className="py-16 sm:py-20 md:py-28 royal-bg relative overflow-hidden">
-        {/* Subtle pattern */}
         <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage:'radial-gradient(circle,#849826 1px,transparent 1px)',backgroundSize:'32px 32px'}} />
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Header */}
           <div data-animate="promise-header" className={`text-center mb-12 fade-up ${visibleSections.has('promise-header') ? 'visible' : ''}`}>
             <div className="gold-line text-[#849826] text-xs tracking-[0.35em] uppercase mb-4">
               <span>Our Promise</span>
@@ -690,7 +628,6 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* 3 Promise Cards */}
           <div data-animate="promise-cards" className={`grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 stagger ${visibleSections.has('promise-cards') ? 'visible' : ''}`}>
             {[
               {
@@ -719,25 +656,20 @@ export default function AboutPage() {
             ))}
           </div>
 
-          {/* Compact Quote */}
           <div data-animate="promise-quote" className={`relative bg-white border border-[#849826]/20 rounded-2xl px-8 sm:px-14 py-10 text-center max-w-3xl mx-auto shadow-lg scale-in ${visibleSections.has('promise-quote') ? 'visible' : ''}`}>
             <div className="corner-tl"/><div className="corner-tr"/>
             <div className="corner-bl"/><div className="corner-br"/>
-
             <svg className="w-10 h-10 text-[#849826] mx-auto mb-5 opacity-30" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
             </svg>
-
             <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl text-[#2c2c2c] leading-relaxed italic font-light mb-6">
               "Where strangers become friends, and guests become family."
             </blockquote>
-
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-14 h-px bg-[#849826]"/>
               <div className="w-2 h-2 bg-[#849826] rotate-45"/>
               <div className="w-14 h-px bg-[#849826]"/>
             </div>
-
             <p className="text-xs uppercase tracking-[0.3em] text-[#849826] font-semibold">Udupi Homestays</p>
           </div>
         </div>

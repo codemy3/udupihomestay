@@ -24,7 +24,10 @@ export default function Home() {
       {/* Premium Horizontal Scroll Section */}
       <HomestaysHorizontalScroll />
 <FacilitiesSection/>
-      <TajStyleShowcase />
+      {/* TajStyleShowcase: show only on mobile */}
+      <div className="block md:hidden">
+        <TajStyleShowcase />
+      </div>
 <ViewpointOasisSection/>
 <TestimonialsSection/>
      
