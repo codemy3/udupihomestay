@@ -38,28 +38,49 @@ function useCounter(target: number, duration = 1500, active: boolean) {
 }
 
 /* ── single stat row inside tag ── */
-function StatRow({ stat, active, index }: { stat: typeof stats[0]; active: boolean; index: number }) {
+function StatRow({ stat, active, index, compact }: {
+  stat: typeof stats[0]; active: boolean; index: number; compact?: boolean;
+}) {
   const count = useCounter(stat.value, 1300 + index * 180, active);
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
       transition={{ delay: 0.8 + index * 0.14, duration: 0.4, ease: 'easeOut' }}
-      className="flex flex-col items-center py-3 relative"
+      className="flex flex-col items-center relative"
+      style={{ paddingTop: compact ? '8px' : '12px', paddingBottom: compact ? '8px' : '12px' }}
     >
       {index > 0 && (
-        <div className="absolute top-0 left-4 right-4 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(200,216,74,0.25), transparent)' }} />
+        <div
+          className="absolute top-0 left-3 right-3 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(200,216,74,0.25), transparent)' }}
+        />
       )}
-      {/* Big serif number */}
-      <div className="font-serif font-bold leading-none tabular-nums text-white"
-        style={{ fontSize: '1.65rem', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
+      {/* Number */}
+      <div
+        className="font-serif font-bold leading-none tabular-nums text-white"
+        style={{
+          fontSize: compact ? '1.25rem' : '1.65rem',
+          textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+        }}
+      >
         {count.toLocaleString()}
-        <span style={{ color: '#c8d84a', fontSize: '1.3rem' }}>{stat.suffix}</span>
+        <span style={{ color: '#c8d84a', fontSize: compact ? '1rem' : '1.3rem' }}>
+          {stat.suffix}
+        </span>
       </div>
       {/* Label */}
-      <div className="mt-1 text-center"
-        style={{ fontSize: '7.5px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', fontWeight: 500, lineHeight: 1.4 }}>
+      <div
+        className="mt-0.5 text-center"
+        style={{
+          fontSize: compact ? '6px' : '7.5px',
+          letterSpacing: '0.16em',
+          textTransform: 'uppercase',
+          color: 'rgba(255,255,255,0.45)',
+          fontWeight: 500,
+          lineHeight: 1.4,
+        }}
+      >
         {stat.label}
       </div>
     </motion.div>
@@ -67,24 +88,19 @@ function StatRow({ stat, active, index }: { stat: typeof stats[0]; active: boole
 }
 
 /* ═══════════════════════════════════════════════
-   3D PRICE TAG — hangs from top-right of section
+   3D PRICE TAG
+   - On mobile (< lg): small tag, top-right corner, scale 0.72
+   - On tablet (md–lg): medium, scale 0.88
+   - On desktop (lg+): full size
 ═══════════════════════════════════════════════ */
 function PriceTag({ active }: { active: boolean }) {
   return (
     <AnimatePresence>
       {active && (
-        /*
-          Outer wrapper: positions tag at top-right, sticking out from the top border.
-          transform-origin at top-center so it swings like a pendulum from the nail.
-        */
         <motion.div
           key="price-tag-3d"
-          className="absolute top-0 right-8 xl:right-16 z-30 hidden lg:block"
+          className="absolute top-0 right-3 sm:right-6 lg:right-8 xl:right-16 z-30"
           style={{ transformOrigin: 'top center' }}
-          /* ── entrance animation ──
-             starts above (y:-120), slightly tilted (rotateX:-90 looks folded up),
-             then drops + swings with a realistic overshoot
-          */
           initial={{
             y: -140,
             rotateX: -90,
@@ -95,7 +111,7 @@ function PriceTag({ active }: { active: boolean }) {
           animate={{
             y: 0,
             rotateX: 0,
-            rotateZ: [null, 12, -7, 4, -2, 0],   // pendulum swing settling
+            rotateZ: [null, 12, -7, 4, -2, 0],
             opacity: 1,
             scale: 1,
           }}
@@ -108,208 +124,228 @@ function PriceTag({ active }: { active: boolean }) {
             transition: { duration: 0.45, ease: 'easeIn' },
           }}
           transition={{
-            y:        { type: 'spring', stiffness: 120, damping: 10, mass: 1.4 },
-            rotateX:  { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-            rotateZ:  { duration: 1.4, ease: 'easeOut', times: [0, 0.25, 0.5, 0.7, 0.85, 1] },
-            opacity:  { duration: 0.3 },
-            scale:    { type: 'spring', stiffness: 180, damping: 18 },
+            y:       { type: 'spring', stiffness: 120, damping: 10, mass: 1.4 },
+            rotateX: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+            rotateZ: { duration: 1.4, ease: 'easeOut', times: [0, 0.25, 0.5, 0.7, 0.85, 1] },
+            opacity: { duration: 0.3 },
+            scale:   { type: 'spring', stiffness: 180, damping: 18 },
           }}
         >
-          {/* ── perspective container for 3D depth ── */}
-          <div style={{ perspective: '600px', perspectiveOrigin: 'top center' }}>
-            <motion.div
-              style={{ transformStyle: 'preserve-3d' }}
-              /* subtle continuous gentle sway once settled */
-              animate={{ rotateZ: [0, 1.5, 0, -1.5, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
-            >
+          {/* Responsive scale wrapper:
+              mobile  → 0.65×
+              sm      → 0.80×
+              md      → 0.90×
+              lg+     → 1.00×
+          */}
+          <div
+            className="origin-top"
+            style={{
+              /* CSS custom property trick for clean responsive scale */
+              transform: 'scale(0.65)',
+            }}
+          >
+            {/* Override with responsive Tailwind via style tag trick —
+                we use a wrapper div with class-based approach instead */}
+          </div>
 
-              {/* ── NAIL / PIN at the very top of section ── */}
-              <div className="flex flex-col items-center" style={{ transformOrigin: 'top center' }}>
+          {/*
+            We use an inline responsive scale via a wrapping div
+            that applies different transform at different breakpoints
+            using Tailwind's responsive prefix on the `style` prop workaround.
+            Cleanest approach: a single div with CSS clamp / media via className.
+          */}
+          <div className="price-tag-scale-wrapper">
+            <style>{`
+              .price-tag-scale-wrapper {
+                transform-origin: top center;
+                transform: scale(0.62);
+              }
+              @media (min-width: 480px) {
+                .price-tag-scale-wrapper { transform: scale(0.75); }
+              }
+              @media (min-width: 768px) {
+                .price-tag-scale-wrapper { transform: scale(0.88); }
+              }
+              @media (min-width: 1024px) {
+                .price-tag-scale-wrapper { transform: scale(1); }
+              }
+            `}</style>
 
-                {/* Nail head (sits on top border of section) */}
-                <div
-                  className="relative flex-shrink-0"
-                  style={{
-                    width: '14px',
-                    height: '14px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 38% 35%, #e8e0c8, #b8a060 55%, #6b5a2a)',
-                    boxShadow: '0 3px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.3)',
-                    zIndex: 10,
-                  }}
-                />
+            <div style={{ perspective: '600px', perspectiveOrigin: 'top center' }}>
+              <motion.div
+                style={{ transformStyle: 'preserve-3d' }}
+                animate={{ rotateZ: [0, 1.5, 0, -1.5, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
+              >
+                <div className="flex flex-col items-center" style={{ transformOrigin: 'top center' }}>
 
-                {/* String from nail to hole */}
-                <div
-                  style={{
-                    width: '1.5px',
-                    height: '22px',
-                    background: 'linear-gradient(to bottom, #b8965a, #c8a84a88)',
-                    boxShadow: '0 0 3px rgba(184,150,90,0.4)',
-                  }}
-                />
-
-                {/* ── HOLE ring ── */}
-                <div
-                  style={{
-                    width: '16px',
-                    height: '16px',
-                    borderRadius: '50%',
-                    border: '2.5px solid #c8a84a',
-                    background: 'radial-gradient(circle at 40% 35%, #e8e4d8, #fdfbf7)',
-                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2)',
-                    flexShrink: 0,
-                  }}
-                />
-
-                {/* Short string into tag body */}
-                <div
-                  style={{
-                    width: '1.5px',
-                    height: '10px',
-                    background: 'linear-gradient(to bottom, #c8a84a88, #c8a84a)',
-                  }}
-                />
-
-                {/* ══════════════════════════════
-                    TAG BODY
-                    - clip-path: pointed bottom (classic price tag)
-                    - layered background for 3D face effect
-                    - left/right edge shadows simulate thickness
-                ══════════════════════════════ */}
-                <div
-                  className="relative"
-                  style={{
-                    width: '110px',
-                    /* bottom V-notch */
-                    clipPath: 'polygon(0% 0%, 100% 0%, 100% calc(100% - 22px), 50% 100%, 0% calc(100% - 22px))',
-                    background: `
-                      linear-gradient(160deg,
-                        #2a3318 0%,
-                        #1e2810 40%,
-                        #253015 70%,
-                        #1a1e0c 100%
-                      )
-                    `,
-                    paddingBottom: '32px',
-                    /* 3D depth shadows */
-                    boxShadow: `
-                      -6px 8px 24px rgba(0,0,0,0.55),
-                       4px 4px 12px rgba(0,0,0,0.3),
-                      inset 1px 0 0 rgba(255,255,255,0.06),
-                      inset -1px 0 0 rgba(0,0,0,0.3)
-                    `,
-                  }}
-                >
-                  {/* ── Grain texture ── */}
+                  {/* ── Nail head ── */}
                   <div
-                    className="absolute inset-0 pointer-events-none"
                     style={{
-                      opacity: 0.06,
-                      backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-                      backgroundSize: '200px',
+                      width: '14px',
+                      height: '14px',
+                      borderRadius: '50%',
+                      background: 'radial-gradient(circle at 38% 35%, #e8e0c8, #b8a060 55%, #6b5a2a)',
+                      boxShadow: '0 3px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.3)',
+                      zIndex: 10,
+                      flexShrink: 0,
                     }}
                   />
 
-                  {/* ── Left highlight edge (3D light source) ── */}
+                  {/* String nail → hole */}
                   <div
-                    className="absolute top-0 bottom-0 left-0 w-[2px]"
-                    style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.12), transparent 60%)' }}
-                  />
-                  {/* ── Right shadow edge ── */}
-                  <div
-                    className="absolute top-0 bottom-0 right-0 w-[2px]"
-                    style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 60%)' }}
-                  />
-
-                  {/* ── Top gold border ── */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-px"
-                    style={{ background: 'linear-gradient(90deg, transparent, #849826, #c8d84a, #849826, transparent)' }}
-                  />
-
-                  {/* ── Subtle dot grid watermark ── */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
                     style={{
-                      opacity: 0.04,
-                      backgroundImage: 'radial-gradient(circle, #c8d84a 1px, transparent 1px)',
-                      backgroundSize: '14px 14px',
+                      width: '1.5px',
+                      height: '22px',
+                      background: 'linear-gradient(to bottom, #b8965a, #c8a84a88)',
+                      boxShadow: '0 0 3px rgba(184,150,90,0.4)',
                     }}
                   />
 
-                  {/* ── "UDUPI HOMESTAYS" faint watermark diagonal ── */}
+                  {/* ── Hole ring ── */}
                   <div
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
-                    style={{ opacity: 0.06 }}
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2.5px solid #c8a84a',
+                      background: 'radial-gradient(circle at 40% 35%, #e8e4d8, #fdfbf7)',
+                      boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2)',
+                      flexShrink: 0,
+                    }}
+                  />
+
+                  {/* String hole → body */}
+                  <div
+                    style={{
+                      width: '1.5px',
+                      height: '10px',
+                      background: 'linear-gradient(to bottom, #c8a84a88, #c8a84a)',
+                    }}
+                  />
+
+                  {/* ── TAG BODY ── */}
+                  <div
+                    className="relative"
+                    style={{
+                      width: '110px',
+                      clipPath: 'polygon(0% 0%, 100% 0%, 100% calc(100% - 22px), 50% 100%, 0% calc(100% - 22px))',
+                      background: 'linear-gradient(160deg, #2a3318 0%, #1e2810 40%, #253015 70%, #1a1e0c 100%)',
+                      paddingBottom: '32px',
+                      boxShadow: `
+                        -6px 8px 24px rgba(0,0,0,0.55),
+                         4px 4px 12px rgba(0,0,0,0.3),
+                        inset 1px 0 0 rgba(255,255,255,0.06),
+                        inset -1px 0 0 rgba(0,0,0,0.3)
+                      `,
+                    }}
                   >
-                    <span
+                    {/* Grain texture */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
                       style={{
-                        fontSize: '7px',
-                        letterSpacing: '0.4em',
-                        textTransform: 'uppercase',
-                        color: '#c8d84a',
-                        fontWeight: 700,
-                        writingMode: 'vertical-rl',
-                        transform: 'rotate(180deg)',
+                        opacity: 0.06,
+                        backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+                        backgroundSize: '200px',
                       }}
+                    />
+
+                    {/* Left highlight edge */}
+                    <div
+                      className="absolute top-0 bottom-0 left-0 w-[2px]"
+                      style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.12), transparent 60%)' }}
+                    />
+                    {/* Right shadow edge */}
+                    <div
+                      className="absolute top-0 bottom-0 right-0 w-[2px]"
+                      style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.4), transparent 60%)' }}
+                    />
+                    {/* Top gold border */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-px"
+                      style={{ background: 'linear-gradient(90deg, transparent, #849826, #c8d84a, #849826, transparent)' }}
+                    />
+                    {/* Dot grid watermark */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        opacity: 0.04,
+                        backgroundImage: 'radial-gradient(circle, #c8d84a 1px, transparent 1px)',
+                        backgroundSize: '14px 14px',
+                      }}
+                    />
+                    {/* Brand watermark */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+                      style={{ opacity: 0.06 }}
                     >
-                      UDUPI HOMESTAYS
-                    </span>
+                      <span
+                        style={{
+                          fontSize: '7px',
+                          letterSpacing: '0.4em',
+                          textTransform: 'uppercase',
+                          color: '#c8d84a',
+                          fontWeight: 700,
+                          writingMode: 'vertical-rl',
+                          transform: 'rotate(180deg)',
+                        }}
+                      >
+                        UDUPI HOMESTAYS
+                      </span>
+                    </div>
+
+                    {/* ── Stats content ── */}
+                    <div className="relative z-10 px-3 pt-3">
+                      {/* Eyebrow */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={active ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ delay: 0.75 }}
+                        className="flex items-center gap-1.5 mb-1"
+                      >
+                        <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.3)' }} />
+                        <span style={{
+                          fontSize: '6px',
+                          letterSpacing: '0.3em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(200,216,74,0.55)',
+                          fontWeight: 600,
+                          whiteSpace: 'nowrap',
+                        }}>
+                          Our Numbers
+                        </span>
+                        <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.3)' }} />
+                      </motion.div>
+
+                      {stats.map((s, i) => (
+                        <StatRow key={i} stat={s} active={active} index={i} />
+                      ))}
+
+                      {/* Est. footer */}
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={active ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ delay: 1.5 }}
+                        className="flex items-center gap-1.5 mt-1"
+                      >
+                        <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.2)' }} />
+                        <span style={{
+                          fontSize: '6px',
+                          letterSpacing: '0.3em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(255,255,255,0.2)',
+                          fontWeight: 500,
+                        }}>
+                          Est. 2017
+                        </span>
+                        <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.2)' }} />
+                      </motion.div>
+                    </div>
                   </div>
 
-                  {/* ── Stats content ── */}
-                  <div className="relative z-10 px-3 pt-3">
-                    {/* Small eyebrow */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={active ? { opacity: 1 } : { opacity: 0 }}
-                      transition={{ delay: 0.75 }}
-                      className="flex items-center gap-1.5 mb-1"
-                    >
-                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.3)' }} />
-                      <span style={{
-                        fontSize: '6px',
-                        letterSpacing: '0.3em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(200,216,74,0.55)',
-                        fontWeight: 600,
-                        whiteSpace: 'nowrap',
-                      }}>
-                        Our Numbers
-                      </span>
-                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.3)' }} />
-                    </motion.div>
-
-                    {stats.map((s, i) => (
-                      <StatRow key={i} stat={s} active={active} index={i} />
-                    ))}
-
-                    {/* Bottom "Est." label */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={active ? { opacity: 1 } : { opacity: 0 }}
-                      transition={{ delay: 1.5 }}
-                      className="flex items-center gap-1.5 mt-1"
-                    >
-                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.2)' }} />
-                      <span style={{
-                        fontSize: '6px',
-                        letterSpacing: '0.3em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.2)',
-                        fontWeight: 500,
-                      }}>
-                        Est. 2017
-                      </span>
-                      <div className="flex-1 h-px" style={{ background: 'rgba(200,216,74,0.2)' }} />
-                    </motion.div>
-                  </div>
                 </div>
-
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       )}
@@ -329,7 +365,7 @@ export default function FacilitiesSection() {
       ref={sectionRef}
       className="relative bg-[#fdfbf7] py-8 md:py-20 lg:py-28 overflow-visible"
     >
-      {/* 3D Price tag anchored to top-right */}
+      {/* 3D Price tag — visible on ALL screen sizes, scales down on mobile */}
       <PriceTag active={isInView} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

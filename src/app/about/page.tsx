@@ -143,12 +143,12 @@ export default function AboutPage() {
   return (
     <div className="bg-white text-[#2c2c2c] overflow-hidden">
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+       
 
         :root { --gold: #849826; }
-
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .font-sans  { font-family: 'Inter', sans-serif; }
+ /*TO this: */
+.font-serif { font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
+.font-sans  { font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
 
         /* ── Universal Reveal ── */
         .fade-up {

@@ -25,11 +25,11 @@ module.exports = {
         'theme-muted': '#949d50',
         'header-color': '#1C1C1C',
       },
-      fontFamily: {
-        heading: ['Playfair Display', 'serif'],
-        body: ['Manrope', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
-      },
+   fontFamily: {
+  heading: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+  body: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+  serif: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+},
     },
   },
   plugins: [],
