@@ -143,12 +143,12 @@ export default function AboutPage() {
   return (
     <div className="bg-white text-[#2c2c2c] overflow-hidden">
       <style jsx global>{`
-       
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
 
         :root { --gold: #849826; }
- /*TO this: */
-.font-serif { font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
-.font-sans  { font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans  { font-family: 'Inter', sans-serif; }
 
         /* ── Universal Reveal ── */
         .fade-up {
@@ -512,28 +512,34 @@ export default function AboutPage() {
             </h2>
           </div>
 
-          {/* Service Cards — glass panels */}
-          <div data-animate="svc-cards" className={`grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-14 stagger ${visibleSections.has('svc-cards') ? 'visible' : ''}`}>
+          {/* Service Cards — 4 cards in mobile (2x2), 3 cards in desktop */}
+          <div data-animate="svc-cards" className={`grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto mb-14 stagger ${visibleSections.has('svc-cards') ? 'visible' : ''}`}>
             {[
-              { title:"ROOM SECURITY",  desc:"Secure lock systems and 24/7 monitoring for your peace of mind." },
-              { title:"FULL AMENITIES", desc:"Premium bedding, AC, and all essential comforts included." },
-              { title:"COMFORTABLE ROOMS", desc:"Spacious interiors with elegant traditional-modern design." },
+              { title:"ROOM SECURITY",  desc:"Secure lock systems and 24/7 monitoring for your peace of mind.", mobile: true },
+              { title:"FULL AMENITIES", desc:"Premium bedding, AC, and all essential comforts included.", mobile: true },
+              { title:"COMFORTABLE ROOMS", desc:"Spacious interiors with elegant traditional-modern design.", mobile: true },
+              { title:"24/7 SUPPORT", desc:"Round-the-clock assistance for all your needs and queries.", mobile: true },
             ].map((s,i)=>(
-              <div key={i} className="svc-card bg-white/18 backdrop-blur-2xl border border-white/25 rounded-2xl text-white px-8 py-10 text-center group">
-                <h3 className="font-serif text-base sm:text-lg font-semibold mb-4 uppercase tracking-wider">{s.title}</h3>
-                <p className="text-white/75 text-xs sm:text-sm leading-relaxed mb-7">{s.desc}</p>
-                <div className="svc-card-arrow text-[#849826] text-xs sm:text-sm flex items-center gap-2 justify-center">
-                  Read More <span className="text-base">→</span>
+              <div 
+                key={i} 
+                className={`svc-card bg-[#849826]/25 backdrop-blur-2xl border border-[#849826]/40 rounded-2xl text-white px-6 sm:px-8 py-8 sm:py-10 text-center group ${
+                  i === 3 ? 'md:hidden' : ''
+                }`}
+              >
+                <h3 className="font-serif text-sm sm:text-base md:text-lg font-semibold mb-3 sm:mb-4 uppercase tracking-wider">{s.title}</h3>
+                <p className="text-white/90 text-[11px] sm:text-xs md:text-sm leading-relaxed mb-5 sm:mb-7">{s.desc}</p>
+                <div className="svc-card-arrow text-white text-[11px] sm:text-xs md:text-sm flex items-center gap-2 justify-center">
+                  Read More <span className="text-sm sm:text-base">→</span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Icon Grid */}
+          {/* Icon Grid - 3 columns on mobile, 4 on tablet, 6 on desktop with circular thick borders */}
           <div data-animate="svc-icons" className={`grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-5 stagger ${visibleSections.has('svc-icons') ? 'visible' : ''}`}>
             {services.map((s,i)=>(
               <div key={i} className="text-center cursor-pointer">
-                <div className="svc-icon w-13 h-13 sm:w-15 sm:h-15 md:w-16 md:h-16 mx-auto border-2 border-[#849826]/35 flex items-center justify-center mb-2 text-white/75"
+                <div className="svc-icon w-13 h-13 sm:w-15 sm:h-15 md:w-16 md:h-16 mx-auto rounded-full border-[3px] border-[#849826]/50 flex items-center justify-center mb-2 text-white/75"
                   style={{width:'52px',height:'52px'}}>
                   {s.icon}
                 </div>
@@ -562,7 +568,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div data-animate="why-cards" className={`grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 spread-cards ${visibleSections.has('why-cards') ? 'visible' : ''}`}>
             {cards.map((card, i) => (
               <div 
@@ -607,7 +613,16 @@ export default function AboutPage() {
         </div>
 
         {/* Stats */}
-        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+          <div data-animate="why-stats" className={`grid grid-cols-1 sm:grid-cols-3 gap-6 text-center stagger ${visibleSections.has('why-stats') ? 'visible' : ''}`}>
+            {[["4.9/5","Guest Rating"],["98%","Guest Satisfaction"],["24/7","Support Available"]].map(([val,label],i)=>(
+              <div key={i} className="bg-white p-6 sm:p-8 shadow-md rounded-xl">
+                <div className="text-[#849826] text-3xl sm:text-4xl font-serif font-bold mb-2">{val}</div>
+                <p className="text-gray-600 text-xs sm:text-sm">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ═══════════════ OUR PROMISE ═══════════════ */}
