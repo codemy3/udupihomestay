@@ -51,7 +51,7 @@ export default function HomestayPage() {
       {/* ── Hero ─────────────────────────────────────── */}
       <section
         className="relative w-full overflow-hidden bg-black"
-        style={{ height: "70vh", minHeight: "500px" }}
+        style={{ height: "45vh", minHeight: "280px" }}
       >
         <div className="relative h-full w-full">
           {heroImage && (
