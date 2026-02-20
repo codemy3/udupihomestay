@@ -25,7 +25,8 @@ export default function HospitalitySection() {
                 playsInline
                 className="w-full h-full object-cover shadow-lg"
               >
-                <source src="/video/hospitality-video.mp4" type="video/mp4" />
+                <source src="/video/whitehouse.mp4" type="video/mp4" />
+                <source src="/video/topvilla.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -57,7 +58,7 @@ export default function HospitalitySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif leading-tight text-gray-900 mb-4 md:mb-6"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-semibold uppercase tracking-[0.02em] leading-tight text-gray-900 mb-4 md:mb-6"
             >
               Welcome To a World of Warmth & Elegance
             </motion.h2>

@@ -60,7 +60,7 @@ export default function ViewpointOasisSection() {
             </div>
 
             {/* Heading */}
-            <h2 className="text-white font-serif text-xl sm:text-2xl md:text-3xl lg:text-4xl leading-tight mb-2 sm:mb-3 md:mb-4">
+            <h2 className="text-white font-serif text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold uppercase tracking-[0.02em] leading-tight mb-2 sm:mb-3 md:mb-4">
               Viewpoint Oasis
             </h2>
 

@@ -51,7 +51,7 @@ export default function HeroSection() {
               {/* Mobile: Slider right bottom, text left bottom, both bottom-aligned */}
               <div className="flex w-full items-end h-full gap-2">
                 <div className="flex flex-col items-start w-[52%] pb-0 justify-end animate-mobile-hero-fade">
-                  <h1 className="text-white text-left text-[20px] sm:text-[28px] leading-tight font-serif mb-[6px] tracking-tight animate-mobile-hero-slide">
+                  <h1 className="text-white text-left text-[22px] sm:text-[32px] leading-tight font-serif font-semibold uppercase tracking-[0.02em] mb-[6px] animate-mobile-hero-slide">
                     Hotel restin Best Hotel In Town
                   </h1>
                   <p className="text-left text-[11px] font-medium text-white mb-[10px] leading-relaxed">
@@ -124,7 +124,7 @@ export default function HeroSection() {
               {/* LEFT: Text content */}
               <div className="flex flex-col items-start w-full md:w-auto">
                 <h1
-                  className={`${!isMobile ? "animate-fade-up-1" : ""} text-white text-left text-[24px] sm:text-[32px] md:text-[36px] lg:text-[42px] leading-tight font-serif mb-[8px] md:mb-[10px] tracking-tight`}
+                  className={`${!isMobile ? "animate-fade-up-1" : ""} text-white text-left text-[26px] sm:text-[34px] md:text-[44px] lg:text-[56px] leading-tight font-serif font-semibold uppercase tracking-[0.02em] mb-[8px] md:mb-[10px]`}
                 >
                   Hotel restin Best Hotel In Town
                 </h1>

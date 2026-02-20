@@ -1,270 +1,222 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, CalendarDays, ChefHat, Clock3, Phone, Sparkles, Utensils } from "lucide-react";
+
+const cateringFormats = [
+  {
+    title: "Wedding Celebrations",
+    desc: "Grand buffet and plated menus designed for engagement, mehendi, wedding, and reception events.",
+    icon: Sparkles,
+  },
+  {
+    title: "Corporate Gatherings",
+    desc: "Executive lunches, team dinners, and conference catering with reliable service flow and timing.",
+    icon: CalendarDays,
+  },
+  {
+    title: "Private Villa Events",
+    desc: "Chef-led dining for birthdays and family functions inside our homestays with curated menu options.",
+    icon: ChefHat,
+  },
+];
+
+const menuHighlights = [
+  "Regional Karnataka specialties with premium ingredients",
+  "Customized vegetarian and non-vegetarian menus",
+  "Live counters, desserts, and beverage service options",
+  "Service team, plating, and event flow coordination",
+];
+
+const eventSteps = [
+  { step: "01", title: "Share Event Details", desc: "Date, guest count, venue, and cuisine preference." },
+  { step: "02", title: "Menu Curation", desc: "We suggest a balanced, premium menu based on your event style." },
+  { step: "03", title: "Final Confirmation", desc: "Timeline, staff plan, and service flow are locked in." },
+  { step: "04", title: "Flawless Execution", desc: "Our team delivers, serves, and manages end-to-end dining." },
+];
 
 export default function CateringPage() {
   return (
-    <div className="min-h-screen bg-[#fbfaf7]">
-      {/* Hero Section - Taj Style */}
-      <section id="hero" className="relative w-full overflow-hidden bg-black" style={{ height: "70vh", minHeight: "500px" }}>
-        {/* Background Image */}
-        <div className="relative h-full w-full">
-          <Image
-            src="/catering-hero.jpg"
-            alt="Catering Services"
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/30" />
+    <div className="min-h-screen bg-[#fbfaf7] text-[#1c1c1c]">
+      <section className="relative h-[48vh] min-h-[320px] md:h-[58vh] overflow-hidden bg-black">
+        <Image
+          src="/catering-hero.jpg"
+          alt="Premium catering services"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/45 to-black/75" />
 
-          {/* Back Button - Top Left */}
-          <Link
-            href="/"
-            className="absolute top-8 left-8 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded transition-all duration-300 flex items-center gap-2 group"
-          >
-            <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </Link>
+        <Link
+          href="/"
+          className="absolute top-4 left-4 md:top-8 md:left-8 z-20 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-4 py-2 md:px-6 md:py-3 rounded text-sm transition-all duration-300 flex items-center gap-2 group"
+        >
+          <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back
+        </Link>
 
-          {/* Hero Text - Taj Style (Left Aligned with Decorative Line) */}
-          <div className="absolute inset-0 flex items-center left-8 md:left-16 lg:left-24 text-white z-30">
-            <div>
-              <div className="flex items-center gap-3 md:gap-4">
-                {/* Decorative Line to the Left */}
-                <div className="h-[1px] w-6 md:w-8 bg-white"></div>
-                
-                <div>
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-[0.02em] uppercase leading-tight drop-shadow-lg">
-                    Premium Catering
-                  </h1>
-                  <p className="text-base md:text-lg font-light mt-2 text-white/90 tracking-wide">
-                    Exceptional Culinary Experiences
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Overview Section - Brand Green Style */}
-      <section className="relative py-12 md:py-16 bg-gradient-to-b from-[#f2f7f1] to-[#f8faf7]">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center">
-            {/* Decorative Header with Lines */}
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="h-px w-8 md:w-10 bg-[#849826]"></div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-light text-[#161616] tracking-normal uppercase">
-                Event Catering Solutions
-              </h2>
-              <div className="h-px w-8 md:w-10 bg-[#849826]"></div>
-            </div>
-            
-            <p className="text-base md:text-lg text-[#1c1c1c]/70 font-light max-w-3xl mx-auto leading-relaxed">
-              Whether you're planning an intimate gathering or a grand celebration, our catering services deliver exceptional cuisine and flawless execution. We specialize in creating memorable dining experiences tailored to your estate and event.
+        <div className="relative z-10 h-full flex items-end">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-10 md:pb-14 text-white">
+            <p className="text-[10px] md:text-xs uppercase tracking-[0.28em] text-[#a8bd42] mb-3">
+              Udupi Homestays Catering
+            </p>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold uppercase tracking-[0.02em] leading-tight max-w-4xl">
+              Premium Catering for
+              <span className="text-[#a8bd42]"> Memorable Events</span>
+            </h1>
+            <p className="mt-4 text-sm md:text-base text-white/85 max-w-2xl leading-relaxed">
+              Elegant menus, attentive service, and seamless execution for every
+              celebration hosted at our estates or your chosen venue.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Signature Dining Section */}
-      <section className="relative w-full overflow-hidden bg-[#fbfaf7]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
-          {/* Left Side - Content */}
-          <div className="bg-gradient-to-br from-[#849826] to-[#6d7f1e] p-8 md:p-12 lg:p-16 flex flex-col justify-between">
-            {/* Top Content */}
-            <div>
-              {/* Label */}
-              <div className="mb-6">
-                <span className="text-white/90 text-xs md:text-sm font-semibold tracking-[0.2em] uppercase">
-                  BEST FOODS IN HOTEL
-                </span>
+      <section className="py-12 md:py-16 bg-white border-b border-[#e8e4d9]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {cateringFormats.map((format) => {
+              const Icon = format.icon;
+              return (
+                <div
+                  key={format.title}
+                  className="rounded-2xl border border-[#e6e1d5] bg-[#fbfaf7] p-5 md:p-6 hover:border-[#849826]/45 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#849826]/10 text-[#849826] flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-base md:text-lg font-semibold uppercase tracking-[0.06em] text-[#161616] mb-2">
+                    {format.title}
+                  </h2>
+                  <p className="text-sm text-[#1c1c1c]/65 leading-relaxed">{format.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 md:py-20 bg-[#fbfaf7]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          <div className="lg:col-span-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Utensils className="w-4 h-4 text-[#849826]" />
+              <p className="text-[10px] md:text-xs uppercase tracking-[0.24em] text-[#849826] font-semibold">
+                Signature Menu Design
+              </p>
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold uppercase tracking-[0.02em] text-[#161616] leading-tight">
+              Crafted Dining Experiences
+            </h2>
+            <p className="mt-4 text-sm md:text-base text-[#1c1c1c]/70 leading-relaxed max-w-2xl">
+              Every catering plan is personalized to your event scale and guest
+              profile. From traditional regional flavors to contemporary spreads,
+              we design menus that feel refined and memorable.
+            </p>
+
+            <div className="mt-6 space-y-3">
+              {menuHighlights.map((item) => (
+                <div key={item} className="flex items-start gap-2">
+                  <span className="mt-1 block w-1.5 h-1.5 rounded-full bg-[#849826]" />
+                  <p className="text-sm text-[#1c1c1c]/70">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="lg:col-span-6">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+              <div className="relative h-[180px] md:h-[230px] rounded-xl overflow-hidden border border-[#e6e1d5]">
+                <Image src="/catering1.webp" alt="Catering dish presentation" fill className="object-cover" />
               </div>
+              <div className="relative h-[180px] md:h-[230px] rounded-xl overflow-hidden border border-[#e6e1d5]">
+                <Image src="/Catering2.webp" alt="Catering platter setup" fill className="object-cover" />
+              </div>
+              <div className="relative h-[180px] md:h-[230px] rounded-xl overflow-hidden border border-[#e6e1d5] col-span-2">
+                <Image src="/reception.jpg" alt="Event catering setup" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+                <p className="absolute left-4 bottom-4 text-white text-sm md:text-base uppercase tracking-[0.12em] font-semibold">
+                  Premium Service Flow
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              {/* Heading */}
-              <h2 className="text-white font-serif text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">
-                Our Signature Dining
+      <section className="py-14 md:py-20 bg-white border-y border-[#e8e4d9]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 md:mb-12">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <div className="h-px w-8 md:w-10 bg-[#849826]" />
+              <p className="text-[10px] md:text-xs uppercase tracking-[0.24em] text-[#849826] font-semibold">
+                Event Workflow
+              </p>
+              <div className="h-px w-8 md:w-10 bg-[#849826]" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold uppercase tracking-[0.02em] text-[#161616]">
+              How We Plan Your Catering
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            {eventSteps.map((item) => (
+              <div key={item.step} className="rounded-2xl border border-[#e6e1d5] bg-[#fbfaf7] p-5 md:p-6">
+                <p className="text-xl md:text-2xl font-semibold text-[#849826]">{item.step}</p>
+                <h3 className="mt-2 text-base font-semibold uppercase tracking-[0.06em] text-[#161616]">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm text-[#1c1c1c]/65 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 md:py-20 bg-gradient-to-br from-[#1d1d1d] via-[#20220f] to-[#161616] text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            <div className="lg:col-span-7">
+              <p className="text-[10px] md:text-xs uppercase tracking-[0.24em] text-[#a8bd42] font-semibold mb-3">
+                Plan Your Event
+              </p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold uppercase tracking-[0.02em] leading-tight">
+                Let Our Team Curate Your Menu
               </h2>
-
-              {/* Description */}
-              <p className="text-white/90 text-base md:text-lg font-light leading-relaxed max-w-xl">
-                Embark on a journey of exquisite experiences, encompassing impeccable service, sophisticated ambience and masterful culinary artistry. Fish lavanghi platter stuffed fish with onion, pomegranate, walnut and sauce
+              <p className="mt-4 text-sm md:text-base text-white/80 max-w-2xl leading-relaxed">
+                Share your event date, number of guests, and food preference.
+                We will send a tailored catering recommendation and service plan.
               </p>
             </div>
 
-            {/* Bottom Content - Thumbnails and Navigation */}
-            <div className="mt-12">
-              {/* Thumbnails */}
-              <div className="grid grid-cols-4 gap-3 mb-6">
-                <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-white/30 hover:border-white transition-all cursor-pointer">
-                  <Image
-                    src="/catering1.webp"
-                    alt="Dish 1"
-                    fill
-                    className="object-cover"
-                  />
+            <div className="lg:col-span-5 space-y-4">
+              <a
+                href="https://wa.me/918971220576"
+                className="flex items-center justify-between rounded-xl border border-white/15 bg-white/5 px-4 py-3 hover:border-[#849826]/55 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-[#a8bd42]" />
+                  <span className="text-sm">+91 89712 20576</span>
                 </div>
-                <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-white/30 hover:border-white transition-all cursor-pointer">
-                  <Image
-                    src="/Catering2.webp"
-                    alt="Dish 2"
-                    fill
-                    className="object-cover"
-                  />
+                <ArrowRight className="w-4 h-4 text-[#a8bd42]" />
+              </a>
+
+              <a
+                href="mailto:fahad@udupistay.com"
+                className="flex items-center justify-between rounded-xl border border-white/15 bg-white/5 px-4 py-3 hover:border-[#849826]/55 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <ChefHat className="w-4 h-4 text-[#a8bd42]" />
+                  <span className="text-sm">fahad@udupistay.com</span>
                 </div>
-                <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-white/30 hover:border-white transition-all cursor-pointer">
-                  <Image
-                    src="/catering-hero.jpg"
-                    alt="Dish 3"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-white/30 hover:border-white transition-all cursor-pointer">
-                  <Image
-                    src="/reception.jpg"
-                    alt="Dish 4"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </div>
+                <ArrowRight className="w-4 h-4 text-[#a8bd42]" />
+              </a>
 
-              {/* Navigation Arrows */}
-              <div className="flex gap-3">
-                <button className="w-12 h-12 bg-white/80 hover:bg-white rounded-lg flex items-center justify-center transition-all group">
-                  <svg className="w-5 h-5 text-[#849826] group-hover:text-[#6d7f1e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition-all border border-white/40">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side - Large Image */}
-          <div className="relative min-h-[400px] lg:min-h-[600px] bg-gradient-to-br from-gray-900 to-gray-800">
-            <Image
-              src="/catering-hero.jpg"
-              alt="Signature Dining Experience"
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#849826]/20" />
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="relative py-20 md:py-32 bg-[#fbfaf7]">
-        <div className="mx-auto max-w-6xl px-6">
-          {/* Section Header */}
-          <div className="text-center mb-20">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-8 md:w-10 bg-[#849826]"></div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-light text-[#161616] tracking-normal uppercase">
-                Plan Your Event
-              </h2>
-              <div className="h-px w-8 md:w-10 bg-[#849826]"></div>
-            </div>
-            <p className="text-base md:text-lg text-[#1c1c1c]/70 font-light max-w-2xl mx-auto leading-relaxed">
-              Let us create an unforgettable culinary experience for your special occasion
-            </p>
-          </div>
-
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
-            {/* Left Column - Image */}
-            <div className="lg:col-span-1">
-              <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-lg">
-                <Image
-                  src="/catering1.webp"
-                  alt="Premium Catering Service"
-                  fill
-                  quality={95}
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-            </div>
-
-            {/* Right Column - Contact Information */}
-            <div className="lg:col-span-2 flex flex-col justify-center space-y-10">
-              {/* Introduction */}
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-6 bg-[#849826]"></div>
-                  <span className="text-sm font-semibold uppercase tracking-[0.15em] text-[#849826]">Get In Touch</span>
-                </div>
-                <p className="text-lg md:text-xl font-light text-[#161616] leading-relaxed">
-                  Our dedicated culinary team is ready to transform your vision into an exceptional dining experience. Contact us to discuss your event details, dietary preferences, and menu options.
-                </p>
-              </div>
-
-              {/* Contact Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* WhatsApp Card */}
-                <div className="p-6 md:p-8 bg-white rounded-xl border border-[#e8f0dd] hover:border-[#849826]/60 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-[#849826]/10 rounded-full flex items-center justify-center">
-                      <svg className="w-5 h-5 text-[#849826]" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.2-4.82 5.591-4.82 9.128 0 3.659 2.007 7.226 5.466 9.359 1.896 1.089 4.057 1.727 6.29 1.727 1.923 0 3.808-.471 5.516-1.398l.142-.072 3.85 1.007-1.024-3.717.118-.176a9.926 9.926 0 002.457-5.857 9.93 9.93 0 00-1.518-6.032A9.938 9.938 0 0012.051 2.75c-5.456 0-9.885 3.582-10.986 8.289"/>
-                      </svg>
-                    </div>
-                    <h3 className="text-base font-light text-[#161616] uppercase tracking-wide">WhatsApp</h3>
-                  </div>
-                  <div className="space-y-1">
-                    <a href="https://wa.me/918971220576" className="text-lg font-light text-[#849826] hover:text-[#6a7a1f] transition-colors">
-                      +91 89712 20576
-                    </a>
-                    <a href="https://wa.me/918050123132" className="text-lg font-light text-[#849826] hover:text-[#6a7a1f] transition-colors block">
-                      +91 80501 23132
-                    </a>
-                    <p className="text-sm text-[#1c1c1c]/60 mt-2">Instant responses & quick inquiries</p>
-                  </div>
-                </div>
-
-                {/* Email Card */}
-                <div className="p-6 md:p-8 bg-white rounded-xl border border-[#e8f0dd] hover:border-[#849826]/60 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-[#849826]/10 rounded-full flex items-center justify-center">
-                      <svg className="w-5 h-5 text-[#849826]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-base font-light text-[#161616] uppercase tracking-wide">Email</h3>
-                  </div>
-                  <div className="space-y-1">
-                    <a href="mailto:fahad@udupistay.com" className="text-lg font-light text-[#849826] hover:text-[#6a7a1f] transition-colors block">
-                      fahad@udupistay.com
-                    </a>
-                    <a href="mailto:asif@udupistay.com" className="text-lg font-light text-[#849826] hover:text-[#6a7a1f] transition-colors block">
-                      asif@udupistay.com
-                    </a>
-                    <p className="text-sm text-[#1c1c1c]/60 mt-2">Detailed proposals & menus</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Response Info */}
-              <div className="pt-6 border-t border-[#e8f0dd]">
-                <div className="space-y-2">
-                  <p className="text-sm font-light text-[#161616]">
-                    <span className="text-[#849826]">Response Time:</span> Within 24 hours
-                  </p>
-                  <p className="text-sm text-[#1c1c1c]/70 leading-relaxed">
-                    Share your event date, guest count, cuisine preferences, and budget to receive a customized catering proposal tailored to your estate and celebration.
-                  </p>
-                </div>
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-white/70 pt-1">
+                <Clock3 className="w-4 h-4 text-[#a8bd42]" />
+                Response time: within 24 hours
               </div>
             </div>
           </div>

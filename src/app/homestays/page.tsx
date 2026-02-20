@@ -33,12 +33,9 @@ export default function StaysPage() {
   }, []);
 
   return (
-    <div className="bg-white text-[#2c2c2c] overflow-hidden">
+    <div className="bg-white text-[#2c2c2c] overflow-hidden font-body">
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
-
-        .font-display { font-family: 'Playfair Display', serif; }
-        .font-body { font-family: 'Cormorant Garamond', serif; }
+        /* Font classes are now set globally via Tailwind config */
 
         /* Royal ornate corners */
         .royal-corners {
@@ -209,47 +206,7 @@ export default function StaysPage() {
         </div>
       </section>
 
-      {/* ═══════════════ INTRO WITH ELEGANT FRAME ═══════════════ */}
-      <section className="py-16 sm:py-20 bg-gradient-to-b from-[#fdfbf7] to-white relative overflow-hidden">
-        {/* Decorative pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #849826 2px, transparent 2px)',
-            backgroundSize: '50px 50px',
-          }}
-        />
-        
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Ornate border frame */}
-          <div className="border-t-2 border-b-2 border-[#849826]/30 py-12 relative">
-            {/* Corner decorations */}
-            <div className="absolute top-0 left-0 w-3 h-3 bg-[#849826] transform -translate-y-1/2 rotate-45" />
-            <div className="absolute top-0 right-0 w-3 h-3 bg-[#849826] transform -translate-y-1/2 rotate-45" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 bg-[#849826] transform translate-y-1/2 rotate-45" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#849826] transform translate-y-1/2 rotate-45" />
-            
-            <div className="text-center max-w-4xl mx-auto">
-              <p className="text-[#849826] text-xs sm:text-sm tracking-[0.3em] uppercase font-semibold mb-4">
-                {homestays.length} Exclusive Destinations
-              </p>
-              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-[#2c2c2c] leading-tight">
-                Where Luxury Meets <span className="text-[#849826] italic">Tradition</span>
-              </h2>
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="h-px w-20 bg-gradient-to-r from-transparent to-[#849826]" />
-                <div className="w-2 h-2 bg-[#849826] rotate-45" />
-                <div className="h-px w-20 bg-gradient-to-l from-transparent to-[#849826]" />
-              </div>
-              <p className="font-body text-gray-600 text-lg sm:text-xl leading-relaxed">
-                Each property in our curated collection embodies the essence of Karnataka's regal heritage, 
-                blending time-honored craftsmanship with contemporary comforts to create sanctuaries of unparalleled elegance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      
       {/* ═══════════════ PROPERTIES — PREMIUM ROYAL CARDS ═══════════════ */}
       <section className="py-16 sm:py-20 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

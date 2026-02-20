@@ -1,30 +1,792 @@
+"use client";
+
+import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
+import { homestays } from "@/data/homestays";
+import { X, ChevronLeft, ChevronRight, MapPin, Camera, Eye } from "lucide-react";
+
+const homestayImages: Record<string, string[]> = {
+  whitehouse: [
+    "/whitehouse/12.webp", "/whitehouse/4.webp", "/whitehouse/11.webp",
+    "/whitehouse/8.webp",  "/whitehouse/2.webp", "/whitehouse/h3.webp",
+    "/whitehouse/h2.webp", "/whitehouse/6.webp",
+  ],
+  gardenvilla:   Array.from({ length: 9 },  (_, i) => `/Cottage/${i + 1}.webp`),
+  cottagehouse:  Array.from({ length: 11 }, (_, i) => `/Cottage/${i + 1}.webp`),
+  topvilla:      Array.from({ length: 8 },  (_, i) => `/hilltop/${i + 1}.webp`),
+  sunrisehome:   Array.from({ length: 9 },  (_, i) => `/sunrise/${i + 1}.webp`),
+  chaletlabonne: Array.from({ length: 14 }, (_, i) => `/chalet/${i + 1}.webp`),
+  viewpoint:     Array.from({ length: 10 }, (_, i) => `/view/${i + 1}.webp`),
+};
+
+const routeKey = (r: string) => r.toLowerCase().replace(/\s+/g, "");
+const getImages = (stay: typeof homestays[0]) =>
+  homestayImages[routeKey(stay.route)] || [stay.image];
+
+// Masonry: assign each card a "height class" based on photo count and index
+const getSpan = (idx: number, imgCount: number): number => {
+  // tall if many photos or specific positions
+  if (imgCount >= 10) return 2;
+  if (idx % 5 === 0 || idx % 7 === 3) return 2;
+  return 1;
+};
+
+type ModalState = { stay: typeof homestays[0]; activeIdx: number } | null;
+
+const CSS = `
+
+:root {
+  --serif: var(--font-navbar);
+  --sans: var(--font-navbar);
+  --gold: #849826;
+  --gold2: #849826;
+  --cream: #ffffff;
+  --warm: #f7f7f7;
+  --parchment: #e6e6e6;
+  --bark: #161616;
+  --fog: #575757;
+  --sand: #cfcfcf;
+  --leaf: #849826;
+  --sky: #f2f2f2;
+}
+
+/* ── Base ── */
+.ms-root {
+  background: var(--cream);
+  color: var(--bark);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── Reveal ── */
+.ms-fade {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.ms-fade.ms-vis { opacity: 1; transform: none; }
+
+/* ═══ HERO ═══ */
+.ms-hero {
+  position: relative;
+  height: 52vw; min-height: 260px; max-height: 540px;
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.ms-hero-bg {
+  position: absolute; inset: 0;
+  will-change: transform;
+}
+.ms-hero-bg img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.10); }
+.ms-hero-ov {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.06) 0%,
+    rgba(0,0,0,0.20) 40%,
+    rgba(0,0,0,0.62) 100%
+  );
+}
+/* warm tinted grain overlay */
+.ms-hero-grain {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+.ms-hero-body {
+  position: relative; z-index: 2;
+  padding: clamp(1.5rem,5vw,3.5rem) clamp(1.25rem,5vw,4rem);
+  width: 100%;
+}
+.ms-hero-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.38em;
+  text-transform: uppercase; font-weight: 500; color: var(--cream);
+  margin-bottom: 0.65rem;
+}
+.ms-hero-tag span { display: block; width: 28px; height: 1px; background: var(--gold); }
+.ms-hero-h1 {
+  font-family: var(--serif); font-size: clamp(32px,7vw,78px);
+  font-weight: 700; line-height: 1.0; color: var(--cream);
+  letter-spacing: 0.02em; text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.ms-hero-h1 em { font-style: italic; color: var(--leaf); }
+.ms-hero-bc {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--sans); font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.78);
+}
+.ms-bc-gold { color: var(--gold); }
+
+/* ═══ INTRO ═══ */
+.ms-intro {
+  background: var(--warm);
+  padding: clamp(2.5rem,6vh,5rem) clamp(1.25rem,5vw,4rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  position: relative;
+}
+@media (min-width: 680px) {
+  .ms-intro { grid-template-columns: 1fr 1fr; align-items: center; }
+}
+.ms-intro-left {}
+.ms-eyebrow {
+  font-family: var(--sans); font-size: 9px; font-weight: 500;
+  letter-spacing: 0.38em; text-transform: uppercase; color: var(--gold);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 0.85rem;
+}
+.ms-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold); }
+.ms-intro-h2 {
+  font-family: var(--serif); font-size: clamp(24px,4vw,46px);
+  font-weight: 700; line-height: 1.15; color: var(--bark);
+  text-transform: uppercase; letter-spacing: 0.02em;
+}
+.ms-intro-h2 em { font-style: italic; color: var(--leaf); }
+.ms-intro-p {
+  font-family: var(--sans); font-size: clamp(13px,1.3vw,14.5px);
+  font-weight: 300; color: var(--fog); line-height: 1.8;
+  margin-top: 0.85rem; max-width: 400px;
+}
+.ms-stats {
+  display: flex; flex-direction: column; gap: 1.25rem;
+  padding-left: 0;
+}
+@media (min-width: 680px) {
+  .ms-stats { padding-left: clamp(2rem,4vw,3rem); border-left: 1px solid var(--sand); }
+}
+.ms-stat {
+  display: flex; align-items: baseline; gap: 0.85rem;
+}
+.ms-stat-n {
+  font-family: var(--serif); font-size: clamp(36px,5vw,54px);
+  font-weight: 700; color: var(--gold2); line-height: 1;
+}
+.ms-stat-info {}
+.ms-stat-l {
+  font-family: var(--sans); font-size: 9px; font-weight: 600;
+  letter-spacing: 0.28em; text-transform: uppercase; color: var(--bark);
+}
+.ms-stat-d {
+  font-family: var(--sans); font-size: 11px; font-weight: 300;
+  color: var(--fog); margin-top: 2px;
+}
+
+/* ═══ FILTER ═══ */
+.ms-filter {
+  background: var(--cream); border-bottom: 1px solid var(--parchment);
+  position: sticky; top: 0; z-index: 30;
+}
+.ms-fi {
+  max-width: 1400px; margin: 0 auto;
+  padding: 0 clamp(1rem,4vw,2.5rem);
+  display: flex; align-items: center;
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.ms-fi::-webkit-scrollbar { display: none; }
+.ms-fi-label {
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.38em;
+  text-transform: uppercase; color: var(--sand);
+  padding-right: 1rem; border-right: 1px solid var(--parchment);
+  margin-right: 0.25rem; flex-shrink: 0; white-space: nowrap;
+  display: none;
+}
+@media (min-width: 480px) { .ms-fi-label { display: block; } }
+.ms-ftag {
+  font-family: var(--sans); font-size: 9.5px; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--fog); background: none; border: none; cursor: pointer;
+  padding: 1rem 1.1rem; flex-shrink: 0; position: relative;
+  white-space: nowrap; transition: color 0.22s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ms-ftag::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; right: 50%;
+  height: 1.5px; background: var(--gold2);
+  transition: left 0.3s cubic-bezier(0.22,1,0.36,1), right 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.ms-ftag:hover { color: var(--bark); }
+.ms-ftag.ms-fon { color: var(--leaf); font-weight: 600; }
+.ms-ftag.ms-fon::after { left: 1.1rem; right: 1.1rem; }
+
+/* ═══ MASONRY GRID ═══ */
+.ms-masonry {
+  max-width: 1400px; margin: 0 auto;
+  padding: clamp(1.5rem,4vh,3rem) clamp(0.85rem,3vw,2rem) clamp(3rem,8vh,6rem);
+  columns: 1;
+  column-gap: clamp(10px,2vw,18px);
+}
+@media (min-width: 500px) { .ms-masonry { columns: 2; } }
+@media (min-width: 900px) { .ms-masonry { columns: 3; } }
+@media (min-width: 1200px) { .ms-masonry { columns: 4; } }
+
+/* ═══ MASONRY CARD ═══ */
+.ms-card {
+  break-inside: avoid;
+  margin-bottom: clamp(10px,2vw,18px);
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  display: block;
+  background: var(--parchment);
+  box-shadow: 0 2px 14px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.5s cubic-bezier(0.22,1,0.36,1),
+              border-color 0.35s;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) {
+  .ms-card:hover {
+    transform: translateY(-5px) scale(1.008);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.16), 0 4px 16px rgba(0,0,0,0.08);
+    border-color: rgba(132,152,38,0.45);
+  }
+}
+
+/* Image wrapper — variable aspect ratio per card */
+.ms-cimg {
+  position: relative;
+  overflow: hidden;
+}
+/* short cards */
+.ms-cimg.ms-h1 { aspect-ratio: 4/3; }
+/* tall cards */
+.ms-cimg.ms-h2 { aspect-ratio: 3/4; }
+
+.ms-cimg img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+@media (hover: hover) { .ms-card:hover .ms-cimg img { transform: scale(1.06); } }
+
+/* warm gradient at bottom of image */
+.ms-cgrad {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.58) 0%,
+    rgba(0,0,0,0.25) 42%,
+    transparent 100%
+  );
+}
+
+/* photo pill */
+.ms-pill {
+  position: absolute; top: 10px; left: 10px; z-index: 3;
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+  padding: 4px 9px; border-radius: 20px;
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--leaf); font-weight: 600;
+  border: 1px solid rgba(132,152,38,0.35);
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity 0.28s, transform 0.28s;
+}
+@media (hover: hover) { .ms-card:hover .ms-pill { opacity: 1; transform: none; } }
+@media (hover: none)  { .ms-pill { opacity: 1; transform: none; } }
+
+/* subtitle tag top-right */
+.ms-tag {
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  font-family: var(--sans); font-size: 8px; letter-spacing: 0.18em; font-weight: 500;
+  text-transform: uppercase; color: var(--bark);
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(6px);
+  padding: 3px 8px; border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+/* eye hover overlay */
+.ms-eye {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.32s;
+}
+.ms-eye-ring {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.70);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cream); backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.30);
+  transform: scale(0.78);
+  transition: transform 0.38s cubic-bezier(0.22,1,0.36,1), background 0.3s;
+}
+@media (hover: hover) {
+  .ms-card:hover .ms-eye { opacity: 1; }
+  .ms-card:hover .ms-eye-ring { transform: scale(1); background: rgba(132,152,38,0.70); }
+}
+
+/* title overlay on image bottom */
+.ms-ctitle {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  padding: 1.25rem 1rem 0.85rem;
+}
+.ms-ctitle h3 {
+  font-family: var(--sans); font-size: clamp(16px,2vw,20px);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+  color: var(--cream); line-height: 1.15;
+}
+.ms-ctitle h3 em { font-style: italic; color: var(--leaf); }
+.ms-gbar {
+  height: 1.5px; width: 22px; background: var(--gold2); margin-top: 5px; border-radius: 2px;
+  transition: width 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+@media (hover: hover) { .ms-card:hover .ms-gbar { width: 48px; } }
+
+/* card footer */
+.ms-cfoot {
+  padding: 0.7rem 1rem 0.85rem;
+  background: var(--warm);
+  border-top: 1px solid var(--parchment);
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+}
+.ms-cloc {
+  display: flex; align-items: center; gap: 3px;
+  font-family: var(--sans); font-size: 9.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fog); min-width: 0; flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ms-cta {
+  font-family: var(--sans); font-size: 9px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
+  display: flex; align-items: center; gap: 3px; flex-shrink: 0;
+  transition: color 0.22s, gap 0.22s;
+}
+@media (hover: hover) { .ms-card:hover .ms-cta { color: var(--leaf); gap: 6px; } }
+
+/* ═══ DIVIDER BAND ═══ */
+.ms-divband {
+  background: var(--parchment);
+  padding: clamp(2rem,5vh,4rem) clamp(1.25rem,5vw,4rem);
+  display: flex; align-items: center; gap: 2rem; overflow: hidden;
+  position: relative;
+}
+.ms-divband::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 40px,
+    rgba(132,152,38,0.09) 40px,
+    rgba(132,152,38,0.09) 41px
+  );
+}
+.ms-divquote {
+  position: relative; z-index: 1; flex: 1;
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(16px,2.5vw,26px); color: var(--bark); line-height: 1.55;
+}
+.ms-divquote em { color: var(--leaf); }
+.ms-divattr {
+  position: relative; z-index: 1; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+.ms-divline { width: 40px; height: 1px; background: var(--gold2); }
+.ms-divname {
+  font-family: var(--sans); font-size: 9px; font-weight: 500;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold2);
+}
+
+/* ═══ MODAL ═══ */
+.ms-mwrap {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  background: rgba(0,0,0,0); backdrop-filter: blur(0px);
+  transition: background 0.38s, backdrop-filter 0.38s;
+}
+@media (min-width: 480px) { .ms-mwrap { padding: 2vh 2vw; } }
+.ms-mwrap.ms-mopen {
+  background: rgba(0,0,0,0.72); backdrop-filter: blur(14px) saturate(1.2);
+}
+.ms-mpanel {
+  position: relative; width: 100%; max-width: 1100px;
+  background: var(--cream); overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 0 0 1px rgba(132,152,38,0.28);
+  transform: translateY(60px) scale(0.91); opacity: 0;
+  transition: transform 0.42s cubic-bezier(0.22,1,0.36,1), opacity 0.42s;
+  border-radius: 0; height: 100vh; max-height: 100vh;
+}
+@media (min-width: 480px) {
+  .ms-mpanel { border-radius: 16px; height: auto; max-height: 92vh; }
+}
+.ms-mwrap.ms-mopen .ms-mpanel { transform: translateY(0) scale(1); opacity: 1; }
+
+.ms-mtop {
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 25%, var(--gold2) 75%, transparent 100%);
+  flex-shrink: 0;
+}
+.ms-mhead {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem 1rem; border-bottom: 1px solid var(--parchment); flex-shrink: 0;
+}
+@media (min-width: 480px) { .ms-mhead { padding: 1rem 1.5rem; } }
+.ms-mname {
+  font-family: var(--sans); font-size: clamp(15px,2.2vw,21px);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+  color: var(--bark);
+}
+.ms-msub {
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.28em;
+  text-transform: uppercase; color: var(--gold); margin-top: 2px;
+}
+.ms-mx {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid var(--parchment); background: none; cursor: pointer; color: var(--bark);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s, color 0.25s, transform 0.35s, border-color 0.25s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ms-mx:hover, .ms-mx:active { background: var(--gold); color: var(--cream); border-color: var(--gold); transform: rotate(90deg); }
+
+.ms-mbody {
+  display: grid; grid-template-columns: 1fr;
+  flex: 1; min-height: 0; overflow: hidden;
+}
+@media (min-width: 680px) { .ms-mbody { grid-template-columns: 1fr 260px; } }
+
+.ms-mstage {
+  position: relative; background: var(--warm);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 0; overflow: hidden;
+  height: 56vw; min-height: 220px; max-height: 420px;
+}
+@media (min-width: 480px) { .ms-mstage { height: auto; max-height: none; } }
+.ms-mimg {
+  position: absolute; inset: 0;
+  transition: opacity 0.18s ease, transform 0.36s cubic-bezier(0.22,1,0.36,1);
+}
+.ms-mimg.ms-moff { opacity: 0; transform: scale(1.04); }
+.ms-mimg.ms-mon  { opacity: 1; transform: scale(1); }
+.ms-mnav {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.92); border: 1px solid var(--parchment);
+  backdrop-filter: blur(8px); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: var(--bark);
+  transition: background 0.25s, color 0.25s, border-color 0.25s, box-shadow 0.25s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ms-mnav:hover, .ms-mnav:active { background: var(--gold); color: var(--cream); border-color: var(--gold); box-shadow: 0 4px 16px rgba(132,152,38,0.35); }
+.ms-mprev { left: 0.6rem; }
+.ms-mnext { right: 0.6rem; }
+@media (min-width: 480px) { .ms-mprev { left: 1rem; } .ms-mnext { right: 1rem; } }
+.ms-mcnt {
+  position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); z-index: 5;
+  font-family: var(--sans); font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  background: rgba(255,255,255,0.95); color: var(--bark);
+  padding: 4px 12px; border-radius: 20px; border: 1px solid var(--parchment);
+  white-space: nowrap;
+}
+.ms-mside {
+  border-top: 1px solid var(--parchment);
+  display: flex; flex-direction: column; overflow: hidden; background: var(--warm);
+  max-height: 180px;
+}
+@media (min-width: 480px) { .ms-mside { max-height: 280px; } }
+@media (min-width: 680px) {
+  .ms-mside { border-top: none; border-left: 1px solid var(--parchment); max-height: none; }
+}
+.ms-sinfo {
+  padding: 0.85rem 1rem; border-bottom: 1px solid var(--parchment); flex-shrink: 0; display: none;
+}
+@media (min-width: 680px) { .ms-sinfo { display: block; padding: 1.25rem 1.1rem 0.9rem; } }
+.ms-slbl { font-family: var(--sans); font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+.ms-stitle { font-family: var(--sans); font-size: 17px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--bark); }
+.ms-sloc { display: flex; align-items: center; gap: 3px; margin-top: 0.45rem; font-family: var(--sans); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fog); }
+.ms-sdesc { font-family: var(--sans); font-size: 12px; font-weight: 300; color: var(--fog); line-height: 1.65; margin-top: 0.5rem; }
+.ms-sthlbl {
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.32em; color: var(--gold);
+  text-transform: uppercase; padding: 0.65rem 1rem 0.35rem; flex-shrink: 0;
+}
+@media (min-width: 680px) { .ms-sthlbl { padding: 0.75rem 1.1rem 0.35rem; } }
+.ms-sthumbs {
+  flex: 1; overflow-y: auto; padding: 0 0.85rem 0.85rem;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; align-content: start;
+  scrollbar-width: thin; scrollbar-color: rgba(132,152,38,0.35) transparent;
+}
+@media (min-width: 680px) { .ms-sthumbs { grid-template-columns: repeat(2, 1fr); } }
+.ms-sthumb {
+  position: relative; aspect-ratio: 4/3; overflow: hidden; cursor: pointer;
+  border-radius: 5px; border: 2px solid transparent;
+  transition: border-color 0.22s, transform 0.22s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ms-sthumb:hover, .ms-sthumb:active { transform: scale(1.04); border-color: rgba(132,152,38,0.5); }
+.ms-sthumb.ms-thon { border-color: var(--gold2); }
+`;
+
 export default function GalleryPage() {
+  const [modal, setModal]         = useState<ModalState>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imgOn, setImgOn]         = useState(false);
+  const [scrollY, setScrollY]     = useState(0);
+  const [visible, setVisible]     = useState<Set<string>>(new Set());
+  const [activeFilter, setFilter] = useState("all");
+
+  useEffect(() => {
+    const id = "ms-styles";
+    if (document.getElementById(id)) return;
+    const el = document.createElement("style");
+    el.id = id; el.textContent = CSS;
+    document.head.appendChild(el);
+    return () => { document.getElementById(id)?.remove(); };
+  }, []);
+
+  useEffect(() => {
+    const s = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", s, { passive: true });
+    return () => window.removeEventListener("scroll", s);
+  }, []);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        const id = e.target.getAttribute("data-animate");
+        if (id && e.isIntersecting) setVisible((p) => new Set([...p, id]));
+      }),
+      { threshold: 0.06, rootMargin: "0px 0px -20px 0px" }
+    );
+    document.querySelectorAll("[data-animate]").forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [activeFilter]);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = modal ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [modal]);
+
+  const openModal = (stay: typeof homestays[0]) => {
+    setModal({ stay, activeIdx: 0 });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      setModalOpen(true);
+      setTimeout(() => setImgOn(true), 80);
+    }));
+  };
+
+  const closeModal = () => {
+    setModalOpen(false); setImgOn(false);
+    setTimeout(() => { setModal(null); }, 420);
+  };
+
+  const goTo = useCallback((dir: 1 | -1) => {
+    if (!modal) return;
+    const len = getImages(modal.stay).length;
+    setImgOn(false);
+    setTimeout(() => {
+      setModal((m) => m ? { ...m, activeIdx: (m.activeIdx + dir + len) % len } : m);
+      setImgOn(true);
+    }, 110);
+  }, [modal]);
+
+  useEffect(() => {
+    const fn = (e: KeyboardEvent) => {
+      if (!modal) return;
+      if (e.key === "ArrowRight") goTo(1);
+      if (e.key === "ArrowLeft")  goTo(-1);
+      if (e.key === "Escape")     closeModal();
+    };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, [modal, goTo]);
+
+  const touchStartX = useCallback((e: React.TouchEvent) => {
+    const startX = e.touches[0].clientX;
+    const onEnd = (ev: TouchEvent) => {
+      const dx = ev.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50) goTo(dx < 0 ? 1 : -1);
+    };
+    window.addEventListener("touchend", onEnd, { once: true });
+  }, [goTo]);
+
+  const filtered = activeFilter === "all"
+    ? homestays
+    : homestays.filter((h) => h.id === activeFilter);
+
   return (
-    <div className="bg-background">
-      <section id="hero" className="border-b border-border bg-surface pt-24">
-        <div className="mx-auto w-full max-w-6xl px-6 py-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-secondary">
-            Gallery
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold text-primary">
-            Sunlit spaces and coastal moments.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm text-foreground/70">
-            Visual stories from the villas, dining tables, and shoreline escapes.
-            Replace these placeholders with your photography.
-          </p>
+    <div className="ms-root">
+
+      {/* ══ HERO ══ */}
+      <section className="ms-hero">
+        <div className="ms-hero-bg" style={{ transform: `translateY(${scrollY * 0.38}px)` }}>
+          <Image src="/about-hero.webp" alt="Gallery" fill className="object-cover scale-110" sizes="100vw" priority />
+          <div className="ms-hero-ov" />
+          <div className="ms-hero-grain" />
+        </div>
+        <div className="ms-hero-body">
+          <div className="ms-hero-tag">
+            <span /><span>Visual Collection</span>
+          </div>
+          <h1 className="ms-hero-h1">OUR <em>GALLERY</em></h1>
+          <div className="ms-hero-bc">
+            <span className="ms-bc-dim">HOME</span>
+            <span className="ms-bc-gold"> › </span>
+            <span className="ms-bc-gold">GALLERY</span>
+          </div>
         </div>
       </section>
-      <section className="mx-auto w-full max-w-6xl px-6 py-16">
-        <div className="grid gap-4 md:grid-cols-3">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <div
-              key={`gallery-${index}`}
-              className="h-48 rounded-3xl bg-muted"
-            />
+
+      {/* ══ INTRO ══ */}
+      <div
+        className="ms-intro"
+        data-animate="intro"
+        style={{ opacity: visible.has("intro") ? 1 : 0, transition: "opacity 0.9s" }}
+      >
+        <div className="ms-intro-left">
+          <div className="ms-eyebrow">Explore Our Estates</div>
+          <h2 className="ms-intro-h2">
+            A Journey Through<br /><em>Udupi&apos;s Finest Homes</em>
+          </h2>
+          <p className="ms-intro-p">
+            Click any property to explore its full visual story — every photograph
+            handpicked to capture the essence of each unique retreat.
+          </p>
+        </div>
+        <div className="ms-stats">
+          {[
+            { n: homestays.length, label: "Properties", d: "Handpicked retreats" },
+            { n: homestays.reduce((a, h) => a + getImages(h).length, 0), label: "Photographs", d: "Curated images" },
+            { n: "7+", label: "Years", d: "Of hospitality" },
+          ].map(({ n, label, d }) => (
+            <div className="ms-stat" key={label}>
+              <div className="ms-stat-n">{n}</div>
+              <div className="ms-stat-info">
+                <div className="ms-stat-l">{label}</div>
+                <div className="ms-stat-d">{d}</div>
+              </div>
+            </div>
           ))}
         </div>
-      </section>
+      </div>
+
+      {/* ══ FILTER ══ */}
+      <div className="ms-filter">
+        <div className="ms-fi">
+          <span className="ms-fi-label">Filter</span>
+          {[{ id: "all", title: "All Properties" }, ...homestays.map((h) => ({ id: h.id, title: h.title }))].map(({ id, title }) => (
+            <button
+              key={id}
+              onClick={() => { setFilter(id); setVisible(new Set()); }}
+              className={`ms-ftag${activeFilter === id ? " ms-fon" : ""}`}
+            >
+              {title}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ MASONRY ══ */}
+      <div className="ms-masonry" key={activeFilter}>
+        {filtered.map((stay, idx) => {
+          const imgs  = getImages(stay);
+          const span  = getSpan(idx, imgs.length);
+          const words = stay.title.split(" ");
+          const last  = words[words.length - 1];
+          const rest  = words.slice(0, -1).join(" ");
+          return (
+            <div key={stay.id} className="ms-card" onClick={() => openModal(stay)}>
+              <div className={`ms-cimg ms-h${span}`}>
+                <Image src={imgs[0]} alt={stay.title} fill className="object-cover" priority={idx < 4} />
+                <div className="ms-cgrad" />
+                <div className="ms-pill"><Camera size={9} />{imgs.length} photos</div>
+                <div className="ms-tag">{stay.subtitle}</div>
+                <div className="ms-eye"><div className="ms-eye-ring"><Eye size={16} /></div></div>
+                <div className="ms-ctitle">
+                  <h3>{rest && <>{rest} </>}<em>{last}</em></h3>
+                  <div className="ms-gbar" />
+                </div>
+              </div>
+              <div className="ms-cfoot">
+                <div className="ms-cloc"><MapPin size={10} />{stay.location.split(",")[0]}</div>
+                <div className="ms-cta">View <ChevronRight size={11} /></div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ══ DIVIDER BAND ══ */}
+      <div className="ms-divband">
+        <div
+          className={`ms-fade${visible.has("divband") ? " ms-vis" : ""}`}
+          data-animate="divband"
+          style={{ display: "flex", alignItems: "center", gap: "2rem", width: "100%" }}
+        >
+          <p className="ms-divquote">
+            &ldquo;Every image is an invitation — to arrive, to breathe,<br />
+            and to <em>belong</em>.&rdquo;
+          </p>
+          <div className="ms-divattr">
+            <div className="ms-divline" />
+            <div className="ms-divname">Udupi Homestays</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══ MODAL ══ */}
+      {modal && (() => {
+        const imgs = getImages(modal.stay);
+        return (
+          <div
+            className={`ms-mwrap${modalOpen ? " ms-mopen" : ""}`}
+            onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+          >
+            <div className="ms-mpanel">
+              <div className="ms-mtop" />
+              <div className="ms-mhead">
+                <div>
+                  <div className="ms-mname">{modal.stay.title}</div>
+                  <div className="ms-msub">{modal.stay.subtitle} · {modal.stay.location.split(",")[0]}</div>
+                </div>
+                <button className="ms-mx" onClick={closeModal}><X size={14} /></button>
+              </div>
+              <div className="ms-mbody">
+                <div className="ms-mstage" onTouchStart={touchStartX}>
+                  <div key={modal.activeIdx} className={`ms-mimg${imgOn ? " ms-mon" : " ms-moff"}`}>
+                    <Image src={imgs[modal.activeIdx]} alt="" fill className="object-contain" priority />
+                  </div>
+                  <button className="ms-mnav ms-mprev" onClick={() => goTo(-1)}><ChevronLeft size={16} /></button>
+                  <button className="ms-mnav ms-mnext" onClick={() => goTo(1)}><ChevronRight size={16} /></button>
+                  <div className="ms-mcnt">
+                    {String(modal.activeIdx + 1).padStart(2, "0")} / {String(imgs.length).padStart(2, "0")}
+                  </div>
+                </div>
+                <div className="ms-mside">
+                  <div className="ms-sinfo">
+                    <div className="ms-slbl">Currently Viewing</div>
+                    <div className="ms-stitle">{modal.stay.title}</div>
+                    <div className="ms-sloc"><MapPin size={9} />{modal.stay.location}</div>
+                    {modal.stay.description && (
+                      <p className="ms-sdesc">{modal.stay.description.split(".")[0]}.</p>
+                    )}
+                  </div>
+                  <div className="ms-sthlbl">All Photos</div>
+                  <div className="ms-sthumbs">
+                    {imgs.map((img, i) => (
+                      <div
+                        key={i}
+                        className={`ms-sthumb${i === modal.activeIdx ? " ms-thon" : ""}`}
+                        onClick={() => {
+                          setImgOn(false);
+                          setTimeout(() => { setModal((m) => m ? { ...m, activeIdx: i } : m); setImgOn(true); }, 110);
+                        }}
+                      >
+                        <Image src={img} alt="" fill className="object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

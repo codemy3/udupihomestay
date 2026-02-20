@@ -22,7 +22,8 @@ const polaroidMeta = [
     accent: "#849826",
     handwritten: "sweet dreams ✦",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 22, height: 22 }}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 44, height: 44 }}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
     ),
   },
@@ -35,7 +36,7 @@ const polaroidMeta = [
     accent: "#6b7a1e",
     handwritten: "so fresh ✦",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 22, height: 22 }}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 44, height: 44 }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
       </svg>
     ),
@@ -49,7 +50,7 @@ const polaroidMeta = [
     accent: "#849826",
     handwritten: "bring everyone ✦",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 22, height: 22 }}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 44, height: 44 }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
     ),
@@ -63,7 +64,7 @@ const polaroidMeta = [
     accent: "#6b7a1e",
     handwritten: "worth every ₹ ✦",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 22, height: 22 }}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: 44, height: 44 }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
@@ -179,7 +180,7 @@ function PolaroidCard({
         <div style={{
           background: meta.photoGradient,
           width: "100%",
-          height: 120,
+          height: 140,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -188,6 +189,14 @@ function PolaroidCard({
           overflow: "hidden",
           borderRadius: 1,
         }}>
+          {/* Bright radial highlight behind content */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(ellipse at 50% 45%, rgba(255,255,200,0.55) 0%, rgba(132,152,38,0.08) 55%, transparent 80%)",
+            pointerEvents: "none",
+          }} />
+
           {/* Subtle texture overlay */}
           <div style={{
             position: "absolute",
@@ -195,6 +204,7 @@ function PolaroidCard({
             background: "radial-gradient(ellipse at 30% 30%, rgba(132,152,38,0.12) 0%, transparent 65%)",
             pointerEvents: "none",
           }} />
+
           {/* Decorative dots */}
           <div style={{
             position: "absolute",
@@ -206,16 +216,29 @@ function PolaroidCard({
             pointerEvents: "none",
           }} />
 
-          <div style={{ color: meta.accent, marginBottom: 10, opacity: 0.85 }}>{meta.icon}</div>
-
+          {/* Icon — larger, brighter, with glow */}
           <div style={{
-            fontSize: 40,
-            fontWeight: 600,
+            color: meta.accent,
+            marginBottom: 8,
+            opacity: 1,
+            filter: `drop-shadow(0 0 8px ${meta.accent}99) drop-shadow(0 2px 4px ${meta.accent}55)`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+            {meta.icon}
+          </div>
+
+          {/* Number — larger, brighter with highlight */}
+          <div style={{
+            fontSize: 46,
+            fontWeight: 700,
             color: meta.accent,
             lineHeight: 1,
-            letterSpacing: -1,
+            letterSpacing: -1.5,
             fontFamily: "ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
-            textShadow: `0 2px 12px ${meta.accent}33`,
+            textShadow: `0 0 18px ${meta.accent}cc, 0 2px 8px ${meta.accent}66, 0 0 2px #fff`,
+            filter: "brightness(1.15)",
           }}>
             {displayValue}
           </div>
@@ -241,7 +264,7 @@ function PolaroidCard({
             textTransform: "uppercase",
             color: "#5a5030",
             fontFamily: "ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
-            fontWeight: 500,
+            fontWeight: 600,
           }}>
             {meta.label}
           </div>
@@ -289,6 +312,46 @@ export default function ExploreSection({ title, rooms, bathrooms, guests, priceP
           0%, 100% { opacity: 0.18; transform: translateY(0px); }
           50%       { opacity: 0.55; transform: translateY(-4px); }
         }
+
+        /*
+         * MOBILE: Scale each polaroid down so all 4 fit in one visible row.
+         * We use transform: scale() on a fixed-size wrapper so inline styles
+         * on the card don't interfere — scale is purely visual.
+         *
+         * Card natural size: 158px wide × ~215px tall (with tape)
+         * Scale 0.44 → ~70px wide. 4 × 70px + gaps ≈ 310px — fits any phone.
+         * We set the wrapper to (158 * 0.44) = 70px wide and collapse height
+         * with a negative margin so the section doesn't get too tall.
+         */
+        @media (max-width: 600px) {
+          .polaroid-track {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            align-items: flex-end !important;
+            justify-content: center !important;
+            gap: 0 !important;
+            padding: 16px 4px 20px !important;
+          }
+          .polaroid-track > div {
+            margin-bottom: 0 !important;
+            flex: 0 0 auto !important;
+          }
+          /* The scale wrapper: visually shrinks the card, layout claims only 70px wide */
+          .polaroid-scale-wrap {
+            width: 70px !important;
+            /* Height = natural card height (215px) * scale (0.44) ≈ 95px */
+            height: 95px !important;
+            display: flex !important;
+            align-items: flex-end !important;
+            justify-content: center !important;
+            overflow: visible !important;
+          }
+          .polaroid-scale-inner {
+            transform: scale(0.44) !important;
+            transform-origin: bottom center !important;
+            flex-shrink: 0 !important;
+          }
+        }
       `}</style>
 
       <div
@@ -300,7 +363,7 @@ export default function ExploreSection({ title, rooms, bathrooms, guests, priceP
           overflow: "hidden",
         }}
       >
-        {/* Floating accent dots (replaces fireflies) */}
+        {/* Floating accent dots */}
         {floatingDots.map((dot, i) => (
           <div key={i} style={{
             position: "absolute",
@@ -410,16 +473,24 @@ export default function ExploreSection({ title, rooms, bathrooms, guests, priceP
           </div>
 
           {/* Cards */}
-          <div style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: "20px 28px",
-          }}>
+          <div
+            className="polaroid-track"
+            style={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: "20px 28px",
+            }}
+          >
             {polaroidMeta.map((meta, i) => (
-              <div key={meta.key} style={{ marginBottom: [0, 20, 8, 14][i] }}>
-                <PolaroidCard meta={meta} value={statValues[meta.key]} index={i} isVisible={isVisible} />
+              // On desktop: normal wrapper with staggered margin
+              // On mobile: .polaroid-scale-wrap shrinks to 70px wide,
+              //            .polaroid-scale-inner applies scale(0.44)
+              <div key={meta.key} className="polaroid-scale-wrap" style={{ marginBottom: [0, 20, 8, 14][i] }}>
+                <div className="polaroid-scale-inner">
+                  <PolaroidCard meta={meta} value={statValues[meta.key]} index={i} isVisible={isVisible} />
+                </div>
               </div>
             ))}
           </div>

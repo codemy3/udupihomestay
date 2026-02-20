@@ -432,7 +432,7 @@ export default function FacilitiesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mb-4 md:mb-6 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-[#1f1f1f]"
+              className="mb-4 md:mb-6 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold uppercase tracking-[0.02em] leading-tight text-[#1f1f1f]"
             >
               Our Facilities &amp; Amenities
             </motion.h2>

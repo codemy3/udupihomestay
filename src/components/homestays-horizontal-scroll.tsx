@@ -100,7 +100,7 @@ export default function HomestaysHorizontalScroll() {
         className="relative w-full h-screen flex flex-col justify-center items-start overflow-hidden z-10"
       >
         <div className="relative z-20 text-center w-full px-6 mb-6">
-          <h2 className="text-4xl md:text-6xl font-light text-white mb-3">
+          <h2 className="text-4xl md:text-6xl font-semibold uppercase tracking-[0.02em] text-white mb-3">
             Discover Our Homestays
           </h2>
           <p className="text-sm md:text-base uppercase tracking-[0.3em] text-white/90">
