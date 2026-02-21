@@ -129,10 +129,18 @@ export default function HomestayPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
 
-            {/* Images */}
+            {/* Media */}
             <div className="lg:col-span-5 flex flex-col gap-3 md:gap-4">
               <div className="relative w-full overflow-hidden shadow-lg rounded-xl" style={{ height: "clamp(200px, 30vw, 320px)" }}>
-                <Image src={images[1] || images[0] || "/last.avif"} alt={`${homestay.title} interior`} fill quality={95} className="object-cover" />
+                <video
+                  className="w-full h-full object-cover block"
+                  src={video}
+                  poster={images[1] || images[0] || "/last.avif"}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
               </div>
               <div className="relative w-full overflow-hidden shadow-lg rounded-xl" style={{ height: "clamp(160px, 22vw, 240px)" }}>
                 <Image src={images[2] || images[0] || "/last.avif"} alt={`${homestay.title} amenities`} fill quality={95} className="object-cover" />
@@ -203,35 +211,6 @@ export default function HomestayPage() {
 
       {/* ══ CINEMATIC GALLERY ═════════════════════════════════════════ */}
       <CinematicGallery images={images} title={homestay.title} />
-
-      {/* ══ VIDEO SHOWCASE ════════════════════════════════════════════ */}
-      <section className="w-full bg-white py-12 md:py-16 lg:py-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 md:mb-10">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="h-px w-8 md:w-10 bg-[#849826]" />
-              <p className="text-[10px] md:text-xs font-light uppercase tracking-[0.25em] text-[#849826]">
-                Feel the Experience
-              </p>
-              <div className="h-px w-8 md:w-10 bg-[#849826]" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-[#161616] uppercase tracking-[0.02em] leading-tight">
-              Life at {homestay.title}
-            </h2>
-            <p className="mt-2 md:mt-3 text-[#1c1c1c]/45 font-light text-xs md:text-sm tracking-wider">
-              Where every moment becomes a memory
-            </p>
-          </div>
-          <div className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl shadow-black/10 ring-1 ring-black/5">
-            <video
-              className="w-full object-cover block"
-              style={{ maxHeight: "65vh", minHeight: "220px" }}
-              src={video}
-              autoPlay loop muted playsInline
-            />
-          </div>
-        </div>
-      </section>
 
       {/* ══ OTHER HOMESTAYS ═══════════════════════════════════════════ */}
       <section className="py-14 md:py-20 bg-[#f8f8f3]">

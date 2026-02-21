@@ -500,6 +500,10 @@ export default function AboutPage() {
       {/* ═══════════════ SERVICES & FACILITIES ═══════════════ */}
       <section className="py-16 sm:py-20 md:py-28 relative overflow-hidden">
         <video className="absolute inset-0 w-full h-full object-cover z-0" src="/video/HillTop.mp4" autoPlay loop muted playsInline />
+        <div
+          className="absolute inset-0 z-[5] bg-cover bg-center"
+          style={{ backgroundImage: "url('/about-story.webp')" }}
+        />
         <div className="absolute inset-0 bg-black/72 z-10" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-20">

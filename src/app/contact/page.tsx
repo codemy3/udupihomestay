@@ -37,7 +37,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#f7f5ef] text-[#1c1c1c]">
       <section
-        className="relative w-full overflow-hidden bg-black"
+        className="relative w-full overflow-hidden bg-[#849826]"
         style={{ height: "44vh", minHeight: "300px" }}
       >
         <div className="absolute inset-0">
@@ -112,7 +112,7 @@ export default function ContactPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             <div className="lg:col-span-7 rounded-3xl p-[1px] bg-gradient-to-br from-[#849826]/60 via-[#d9dfb8] to-[#849826]/20 shadow-[0_24px_64px_rgba(0,0,0,0.12)]">
-              <div className="rounded-3xl bg-gradient-to-br from-[#20240f] via-[#1a1a1a] to-[#20240f] p-6 md:p-8">
+              <div className="rounded-3xl bg-[#849826] p-6 md:p-8 text-white">
                 {submitted ? (
                   <div className="min-h-[360px] flex flex-col justify-center text-white">
                     <div className="w-12 h-12 rounded-full border border-[#849826] text-[#849826] flex items-center justify-center mb-4 bg-[#849826]/10">
@@ -152,52 +152,47 @@ export default function ContactPage() {
                       setSubmitted(true);
                     }}
                   >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="h-4 w-4 text-[#849826]" />
-                      <p className="text-[10px] uppercase tracking-[0.24em] text-[#849826] font-semibold">
-                        Royal Inquiry Form
-                      </p>
-                    </div>
+                    {/* Heading removed as requested */}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white/55 mb-2">
+                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white mb-2">
                           Full Name
                         </label>
                         <input
                           type="text"
                           required
                           placeholder="Your full name"
-                          className="w-full bg-white/5 border border-white/15 focus:border-[#849826] outline-none py-3 px-3 text-sm text-white placeholder:text-white/30 rounded-lg"
+                          className="w-full bg-white/10 border border-white/15 focus:border-white outline-none py-3 px-3 text-sm text-white placeholder:text-white/80 rounded-lg"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white/55 mb-2">
+                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white mb-2">
                           Email
                         </label>
                         <input
                           type="email"
                           required
                           placeholder="your@email.com"
-                          className="w-full bg-white/5 border border-white/15 focus:border-[#849826] outline-none py-3 px-3 text-sm text-white placeholder:text-white/30 rounded-lg"
+                          className="w-full bg-white/10 border border-white/15 focus:border-white outline-none py-3 px-3 text-sm text-white placeholder:text-white/80 rounded-lg"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white/55 mb-2">
+                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white mb-2">
                           Phone
                         </label>
                         <input
                           type="tel"
                           required
                           placeholder="+91 00000 00000"
-                          className="w-full bg-white/5 border border-white/15 focus:border-[#849826] outline-none py-3 px-3 text-sm text-white placeholder:text-white/30 rounded-lg"
+                          className="w-full bg-white/10 border border-white/15 focus:border-white outline-none py-3 px-3 text-sm text-white placeholder:text-white/80 rounded-lg"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white/55 mb-2">
+                        <label className="block text-[10px] uppercase tracking-[0.22em] text-white mb-2">
                           Preferred Estate
                         </label>
                         <input
@@ -216,7 +211,7 @@ export default function ContactPage() {
                         rows={5}
                         required
                         placeholder="Tell us about your dates, number of guests, and special requests."
-                        className="w-full bg-white/5 border border-white/15 focus:border-[#849826] outline-none p-3 text-sm text-white placeholder:text-white/30 rounded-lg resize-none"
+                        className="w-full bg-white/10 border border-white/15 focus:border-white outline-none p-3 text-sm text-white placeholder:text-white/80 rounded-lg resize-none"
                       />
                     </div>
 

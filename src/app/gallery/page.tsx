@@ -23,14 +23,6 @@ const routeKey = (r: string) => r.toLowerCase().replace(/\s+/g, "");
 const getImages = (stay: typeof homestays[0]) =>
   homestayImages[routeKey(stay.route)] || [stay.image];
 
-// Masonry: assign each card a "height class" based on photo count and index
-const getSpan = (idx: number, imgCount: number): number => {
-  // tall if many photos or specific positions
-  if (imgCount >= 10) return 2;
-  if (idx % 5 === 0 || idx % 7 === 3) return 2;
-  return 1;
-};
-
 type ModalState = { stay: typeof homestays[0]; activeIdx: number } | null;
 
 const CSS = `
@@ -88,7 +80,6 @@ const CSS = `
     rgba(0,0,0,0.62) 100%
   );
 }
-/* warm tinted grain overlay */
 .ms-hero-grain {
   position: absolute; inset: 0; pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
@@ -132,7 +123,6 @@ const CSS = `
 @media (min-width: 680px) {
   .ms-intro { grid-template-columns: 1fr 1fr; align-items: center; }
 }
-.ms-intro-left {}
 .ms-eyebrow {
   font-family: var(--sans); font-size: 9px; font-weight: 500;
   letter-spacing: 0.38em; text-transform: uppercase; color: var(--gold);
@@ -157,14 +147,11 @@ const CSS = `
 @media (min-width: 680px) {
   .ms-stats { padding-left: clamp(2rem,4vw,3rem); border-left: 1px solid var(--sand); }
 }
-.ms-stat {
-  display: flex; align-items: baseline; gap: 0.85rem;
-}
+.ms-stat { display: flex; align-items: baseline; gap: 0.85rem; }
 .ms-stat-n {
   font-family: var(--serif); font-size: clamp(36px,5vw,54px);
   font-weight: 700; color: var(--gold2); line-height: 1;
 }
-.ms-stat-info {}
 .ms-stat-l {
   font-family: var(--sans); font-size: 9px; font-weight: 600;
   letter-spacing: 0.28em; text-transform: uppercase; color: var(--bark);
@@ -174,7 +161,7 @@ const CSS = `
   color: var(--fog); margin-top: 2px;
 }
 
-/* ═══ FILTER ═══ */
+/* ═══ FILTER — BOLD ═══ */
 .ms-filter {
   background: var(--cream); border-bottom: 1px solid var(--parchment);
   position: sticky; top: 0; z-index: 30;
@@ -195,8 +182,8 @@ const CSS = `
 }
 @media (min-width: 480px) { .ms-fi-label { display: block; } }
 .ms-ftag {
-  font-family: var(--sans); font-size: 9.5px; font-weight: 500;
-  letter-spacing: 0.22em; text-transform: uppercase;
+  font-family: var(--sans); font-size: 10px; font-weight: 800;
+  letter-spacing: 0.24em; text-transform: uppercase;
   color: var(--fog); background: none; border: none; cursor: pointer;
   padding: 1rem 1.1rem; flex-shrink: 0; position: relative;
   white-space: nowrap; transition: color 0.22s;
@@ -204,62 +191,68 @@ const CSS = `
 }
 .ms-ftag::after {
   content: ''; position: absolute; bottom: 0; left: 50%; right: 50%;
-  height: 1.5px; background: var(--gold2);
+  height: 2px; background: var(--gold2);
   transition: left 0.3s cubic-bezier(0.22,1,0.36,1), right 0.3s cubic-bezier(0.22,1,0.36,1);
 }
 .ms-ftag:hover { color: var(--bark); }
-.ms-ftag.ms-fon { color: var(--leaf); font-weight: 600; }
+.ms-ftag.ms-fon { color: var(--leaf); font-weight: 900; }
 .ms-ftag.ms-fon::after { left: 1.1rem; right: 1.1rem; }
 
-/* ═══ MASONRY GRID ═══ */
-.ms-masonry {
-  max-width: 1400px; margin: 0 auto;
+/* ═══ CARD GRID — 3 columns, every 7th full-width ═══ */
+.ms-cardlist {
+  max-width: 1200px; margin: 0 auto;
   padding: clamp(1.5rem,4vh,3rem) clamp(0.85rem,3vw,2rem) clamp(3rem,8vh,6rem);
-  columns: 1;
-  column-gap: clamp(10px,2vw,18px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(14px,2vw,20px);
 }
-@media (min-width: 500px) { .ms-masonry { columns: 2; } }
-@media (min-width: 900px) { .ms-masonry { columns: 3; } }
-@media (min-width: 1200px) { .ms-masonry { columns: 4; } }
+@media (min-width: 600px) {
+  .ms-cardlist { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .ms-cardlist { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 600px) {
+  .ms-card-full { grid-column: 1 / -1; }
+  .ms-card-full .ms-cimg { aspect-ratio: 21/9; }
+  .ms-card-full .ms-ctitle h3 { font-size: clamp(20px,3vw,32px); }
+}
 
-/* ═══ MASONRY CARD ═══ */
+/* ═══ STACKED CARD (same on all screen sizes) ═══ */
 .ms-card {
-  break-inside: avoid;
-  margin-bottom: clamp(10px,2vw,18px);
   position: relative;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  display: block;
-  background: var(--parchment);
+  display: flex;
+  flex-direction: column;
+  background: var(--warm);
   box-shadow: 0 2px 14px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
   border: 1px solid rgba(0,0,0,0.1);
   transition: transform 0.5s cubic-bezier(0.22,1,0.36,1),
               box-shadow 0.5s cubic-bezier(0.22,1,0.36,1),
               border-color 0.35s;
   -webkit-tap-highlight-color: transparent;
+  height: 420px;
 }
 @media (hover: hover) {
   .ms-card:hover {
-    transform: translateY(-5px) scale(1.008);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.16), 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-4px) scale(1.005);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.07);
     border-color: rgba(132,152,38,0.45);
   }
 }
 
-/* Image wrapper — variable aspect ratio per card */
+/* ── Image pane ── */
 .ms-cimg {
   position: relative;
   overflow: hidden;
+  aspect-ratio: 16/9;
+  height: 320px;
 }
-/* short cards */
-.ms-cimg.ms-h1 { aspect-ratio: 4/3; }
-/* tall cards */
-.ms-cimg.ms-h2 { aspect-ratio: 3/4; }
 
 .ms-cslide {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   will-change: transform, opacity;
   animation-duration: 340ms;
   animation-timing-function: cubic-bezier(0.22,1,0.36,1);
@@ -267,28 +260,20 @@ const CSS = `
 }
 .ms-cslide.ms-cslide-next { animation-name: msCardSlideInNext; }
 .ms-cslide.ms-cslide-prev { animation-name: msCardSlideInPrev; }
-
 @keyframes msCardSlideInNext {
   from { opacity: 0.3; transform: translateX(20px) scale(1.02); }
-  to   { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 1;   transform: translateX(0) scale(1); }
 }
 @keyframes msCardSlideInPrev {
   from { opacity: 0.3; transform: translateX(-20px) scale(1.02); }
-  to   { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 1;   transform: translateX(0) scale(1); }
 }
-
 .ms-cimg img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
 @media (hover: hover) { .ms-card:hover .ms-cimg img { transform: scale(1.06); } }
 
-/* warm gradient at bottom of image */
 .ms-cgrad {
   position: absolute; inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.58) 0%,
-    rgba(0,0,0,0.25) 42%,
-    transparent 100%
-  );
+  background: linear-gradient(to top, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0.12) 45%, transparent 100%);
 }
 
 /* photo pill */
@@ -300,13 +285,9 @@ const CSS = `
   font-family: var(--sans); font-size: 9px; letter-spacing: 0.15em;
   text-transform: uppercase; color: var(--leaf); font-weight: 600;
   border: 1px solid rgba(132,152,38,0.35);
-  opacity: 0; transform: translateY(-4px);
-  transition: opacity 0.28s, transform 0.28s;
 }
-@media (hover: hover) { .ms-card:hover .ms-pill { opacity: 1; transform: none; } }
-@media (hover: none)  { .ms-pill { opacity: 1; transform: none; } }
 
-/* subtitle tag top-right */
+/* subtitle tag */
 .ms-tag {
   position: absolute; top: 10px; right: 10px; z-index: 3;
   font-family: var(--sans); font-size: 8px; letter-spacing: 0.18em; font-weight: 500;
@@ -316,7 +297,7 @@ const CSS = `
   border: 1px solid rgba(0,0,0,0.12);
 }
 
-/* eye hover overlay */
+/* eye hover */
 .ms-eye {
   position: absolute; inset: 0; z-index: 2;
   display: flex; align-items: center; justify-content: center;
@@ -336,13 +317,13 @@ const CSS = `
   .ms-card:hover .ms-eye-ring { transform: scale(1); background: rgba(132,152,38,0.70); }
 }
 
-/* title overlay on image bottom */
+/* title overlay on image — always visible */
 .ms-ctitle {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
-  padding: 1.25rem 1rem 0.85rem;
+  padding: 1.25rem 1rem 2.8rem;
 }
 .ms-ctitle h3 {
-  font-family: var(--sans); font-size: clamp(16px,2vw,20px);
+  font-family: var(--sans); font-size: clamp(15px,2vw,22px);
   font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
   color: var(--cream); line-height: 1.15;
 }
@@ -353,87 +334,148 @@ const CSS = `
 }
 @media (hover: hover) { .ms-card:hover .ms-gbar { width: 48px; } }
 
-/* card footer */
-.ms-cfoot {
-  padding: 0.7rem 1rem 0.85rem;
-  background: var(--warm);
-  border-top: 1px solid var(--parchment);
-  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-}
-.ms-cloc {
-  display: flex; align-items: center; gap: 3px;
-  font-family: var(--sans); font-size: 9.5px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--fog); min-width: 0; flex: 1;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.ms-cta {
-  font-family: var(--sans); font-size: 9px; font-weight: 600;
-  letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
-  display: flex; align-items: center; gap: 3px; flex-shrink: 0;
-  transition: color 0.22s, gap 0.22s;
-}
-@media (hover: hover) { .ms-card:hover .ms-cta { color: var(--leaf); gap: 6px; } }
-
-.ms-cnext {
+/* ══ MOBILE SWIPE HINT ══ */
+.ms-swipe-hint {
   position: absolute;
-  top: 50%;
-  right: 10px;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,0,0,0.58);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 999px;
+  padding: 5px 13px 5px 10px;
+  color: rgba(255,255,255,0.96);
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: msSwipeHintBounce 2.2s ease-in-out infinite;
+}
+/* only show on touch devices — hide on desktop pointer devices */
+@media (hover: hover) { .ms-swipe-hint { display: none; } }
+
+.ms-swipe-chev {
+  display: flex; align-items: center;
+}
+.ms-swipe-chev svg {
+  animation: msChevPulse 1.3s ease-in-out infinite;
+}
+.ms-swipe-chev svg:nth-child(2) { animation-delay: 0.18s; opacity: 0.6; margin-left: -5px; }
+@keyframes msChevPulse {
+  0%, 100% { opacity: 0.4; transform: translateX(0); }
+  50%       { opacity: 1;   transform: translateX(2px); }
+}
+@keyframes msSwipeHintBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0px); }
+  50%       { transform: translateX(-50%) translateY(-3px); }
+}
+
+/* ── dot indicators (mobile) ── */
+.ms-dots {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  pointer-events: none;
+}
+@media (hover: hover) { .ms-dots { display: none; } }
+.ms-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.38);
+  transition: background 0.25s, transform 0.25s, width 0.25s;
+  flex-shrink: 0;
+}
+.ms-dot.ms-dot-on {
+  background: var(--gold);
+  transform: scale(1.4);
+  width: 14px;
+  border-radius: 3px;
+}
+
+/* desktop next arrow */
+.ms-cnext {
+  position: absolute; top: 50%; right: 10px;
   transform: translateY(-50%);
   z-index: 4;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
+  width: 34px; height: 34px; border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.75);
-  background: rgba(15,15,15,0.38);
-  color: #fff;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(6px);
-  cursor: pointer;
+  background: rgba(15,15,15,0.38); color: #fff;
+  display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px); cursor: pointer;
   transition: transform 0.28s ease, background 0.22s ease, border-color 0.22s ease;
   animation: msArrowNudge 1.7s ease-in-out infinite;
   -webkit-tap-highlight-color: transparent;
 }
 @keyframes msArrowNudge {
   0%, 100% { transform: translateY(-50%) translateX(0); }
-  50% { transform: translateY(-50%) translateX(3px); }
+  50%       { transform: translateY(-50%) translateX(3px); }
 }
-@media (min-width: 1024px) {
-  .ms-cnext { display: flex; }
-}
+@media (min-width: 1024px) { .ms-cnext { display: flex; } }
 .ms-cnext:hover {
-  background: rgba(132,152,38,0.9);
-  border-color: rgba(132,152,38,0.95);
+  background: rgba(132,152,38,0.9); border-color: rgba(132,152,38,0.95);
   transform: translateY(-50%) scale(1.05);
 }
 
-.ms-cswipe {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  z-index: 4;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.78);
-  background: rgba(15,15,15,0.38);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(6px);
-  pointer-events: none;
-  animation: msSwipeLeftHint 1.45s ease-in-out infinite;
+/* ── Info pane — always visible ── */
+.ms-cinfo {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0.9rem 1.2rem 1rem;
+  background: var(--warm);
+  gap: 0.45rem;
+  min-width: 0;
+  border-top: 1px solid var(--parchment);
 }
-@keyframes msSwipeLeftHint {
-  0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.9; }
-  50% { transform: translateY(-50%) translateX(-6px); opacity: 1; }
+
+.ms-cinfo-title {
+  font-family: var(--sans); font-size: clamp(14px,1.8vw,18px);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+  color: var(--bark); line-height: 1.2;
+  display: none; /* title is on the image overlay; keep hidden in footer */
 }
-@media (min-width: 1024px) {
-  .ms-cswipe { display: none; }
+.ms-cinfo-title em { font-style: italic; color: var(--leaf); }
+
+.ms-cinfo-gbar {
+  height: 1.5px; width: 22px; background: var(--gold2); border-radius: 2px;
+  transition: width 0.45s cubic-bezier(0.22,1,0.36,1);
+  display: none;
 }
+@media (hover: hover) { .ms-card:hover .ms-cinfo-gbar { width: 48px; } }
+
+.ms-cinfo-sub {
+  font-family: var(--sans); font-size: 8.5px; font-weight: 600;
+  letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold);
+}
+
+.ms-cinfo-loc {
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--sans); font-size: 9.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fog);
+}
+.ms-cinfo-photos {
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--sans); font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fog); font-weight: 500;
+}
+.ms-cinfo-cta {
+  margin-top: 0.25rem;
+  font-family: var(--sans); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold);
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: color 0.22s, gap 0.22s;
+}
+@media (hover: hover) { .ms-card:hover .ms-cinfo-cta { color: var(--leaf); gap: 8px; } }
 
 /* ═══ DIVIDER BAND ═══ */
 .ms-divband {
@@ -443,14 +485,10 @@ const CSS = `
   position: relative;
 }
 .ms-divband::before {
-  content: '';
-  position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 40px,
-    rgba(132,152,38,0.09) 40px,
-    rgba(132,152,38,0.09) 41px
+    90deg, transparent 0px, transparent 40px,
+    rgba(132,152,38,0.09) 40px, rgba(132,152,38,0.09) 41px
   );
 }
 .ms-divquote {
@@ -494,7 +532,6 @@ const CSS = `
   .ms-mpanel { border-radius: 16px; height: auto; max-height: 92vh; }
 }
 .ms-mwrap.ms-mopen .ms-mpanel { transform: translateY(0) scale(1); opacity: 1; }
-
 .ms-mtop {
   height: 3px;
   background: linear-gradient(90deg, transparent 0%, var(--gold) 25%, var(--gold2) 75%, transparent 100%);
@@ -507,8 +544,7 @@ const CSS = `
 @media (min-width: 480px) { .ms-mhead { padding: 1rem 1.5rem; } }
 .ms-mname {
   font-family: var(--sans); font-size: clamp(15px,2.2vw,21px);
-  font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
-  color: var(--bark);
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--bark);
 }
 .ms-msub {
   font-family: var(--sans); font-size: 9px; letter-spacing: 0.28em;
@@ -522,13 +558,11 @@ const CSS = `
   -webkit-tap-highlight-color: transparent;
 }
 .ms-mx:hover, .ms-mx:active { background: var(--gold); color: var(--cream); border-color: var(--gold); transform: rotate(90deg); }
-
 .ms-mbody {
   display: grid; grid-template-columns: 1fr;
   flex: 1; min-height: 0; overflow: hidden;
 }
 @media (min-width: 680px) { .ms-mbody { grid-template-columns: 1fr 260px; } }
-
 .ms-mstage {
   position: relative; background: var(--warm);
   display: flex; align-items: center; justify-content: center;
@@ -650,9 +684,7 @@ export default function GalleryPage() {
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = modal ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = prev;
-    };
+    return () => { document.body.style.overflow = prev; };
   }, [modal]);
 
   const openModal = (stay: typeof homestays[0]) => {
@@ -803,41 +835,78 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* ══ MASONRY ══ */}
-      <div className="ms-masonry" key={activeFilter}>
+      {/* ══ HORIZONTAL CARD LIST ══ */}
+      <div className="ms-cardlist" key={activeFilter}>
         {filtered.map((stay, idx) => {
-          const imgs  = getImages(stay);
-          const span  = getSpan(idx, imgs.length);
+          const imgs = getImages(stay);
           const cardIdx = cardImageIdx[stay.id] ?? 0;
           const activeCardIdx = ((cardIdx % imgs.length) + imgs.length) % imgs.length;
           const cardDir = cardAnimDir[stay.id] ?? 1;
           const words = stay.title.split(" ");
           const last  = words[words.length - 1];
           const rest  = words.slice(0, -1).join(" ");
+          const dotCount = Math.min(imgs.length, 7);
+
           return (
             <div
               key={stay.id}
-              className="ms-card"
+              className={`ms-card${(idx + 1) % 7 === 0 ? " ms-card-full" : ""}`}
               onClick={() => {
                 if (suppressCardOpenRef.current[stay.id]) return;
                 openModal(stay);
               }}
             >
+              {/* ── Image pane ── */}
               <div
-                className={`ms-cimg ms-h${span}`}
+                className="ms-cimg"
                 onTouchStart={(e) => onCardTouchStart(stay.id, e)}
                 onTouchEnd={(e) => onCardTouchEnd(stay.id, imgs.length, e)}
               >
-                <div key={`${stay.id}-${activeCardIdx}`} className={`ms-cslide${cardDir === 1 ? " ms-cslide-next" : " ms-cslide-prev"}`}>
+                <div
+                  key={`${stay.id}-${activeCardIdx}`}
+                  className={`ms-cslide${cardDir === 1 ? " ms-cslide-next" : " ms-cslide-prev"}`}
+                >
                   <Image src={imgs[activeCardIdx]} alt={stay.title} fill className="object-cover" priority={idx < 4} />
                 </div>
                 <div className="ms-cgrad" />
                 <div className="ms-pill"><Camera size={9} />{imgs.length} photos</div>
                 <div className="ms-tag">{stay.subtitle}</div>
                 <div className="ms-eye"><div className="ms-eye-ring"><Eye size={16} /></div></div>
-                <div className="ms-cswipe" aria-hidden="true">
-                  <ChevronLeft size={15} />
+
+                {/* mobile title overlay */}
+                <div className="ms-ctitle">
+                  <h3>{rest && <>{rest} </>}<em>{last}</em></h3>
+                  <div className="ms-gbar" />
                 </div>
+
+                {/* mobile dot indicators */}
+                {imgs.length > 1 && (
+                  <div className="ms-dots">
+                    {Array.from({ length: dotCount }).map((_, i) => {
+                      const isActive = imgs.length <= 7
+                        ? i === activeCardIdx
+                        : i === Math.min(Math.floor(activeCardIdx / imgs.length * dotCount), dotCount - 1);
+                      return <div key={i} className={`ms-dot${isActive ? " ms-dot-on" : ""}`} />;
+                    })}
+                  </div>
+                )}
+
+                {/* mobile swipe hint — shown only on touch */}
+                {imgs.length > 1 && (
+                  <div className="ms-swipe-hint">
+                    <div className="ms-swipe-chev">
+                      <ChevronLeft size={10} />
+                      <ChevronLeft size={10} />
+                    </div>
+                    Swipe for more
+                    <div className="ms-swipe-chev">
+                      <ChevronRight size={10} />
+                      <ChevronRight size={10} />
+                    </div>
+                  </div>
+                )}
+
+                {/* desktop next arrow */}
                 <button
                   className="ms-cnext"
                   onClick={(e) => {
@@ -848,14 +917,18 @@ export default function GalleryPage() {
                 >
                   <ChevronRight size={15} />
                 </button>
-                <div className="ms-ctitle">
-                  <h3>{rest && <>{rest} </>}<em>{last}</em></h3>
-                  <div className="ms-gbar" />
-                </div>
               </div>
-              <div className="ms-cfoot">
-                <div className="ms-cloc"><MapPin size={10} />{stay.location.split(",")[0]}</div>
-                <div className="ms-cta">View <ChevronRight size={11} /></div>
+
+              {/* ── Info pane ── */}
+              <div className="ms-cinfo">
+                <div className="ms-cinfo-sub">{stay.subtitle}</div>
+                <div className="ms-cinfo-title">
+                  {rest && <>{rest} </>}<em>{last}</em>
+                </div>
+                <div className="ms-cinfo-gbar" />
+                <div className="ms-cinfo-loc"><MapPin size={10} />{stay.location.split(",")[0]}</div>
+                <div className="ms-cinfo-photos"><Camera size={10} />{imgs.length} photographs</div>
+                <div className="ms-cinfo-cta">View Gallery <ChevronRight size={11} /></div>
               </div>
             </div>
           );

@@ -129,13 +129,13 @@ export default function CateringPage() {
           <div className="lg:col-span-6">
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div className="relative h-[180px] md:h-[230px] rounded-xl overflow-hidden border border-[#e6e1d5]">
-                <Image src="/catering1.webp" alt="Catering dish presentation" fill className="object-cover" />
+                <Image src="/catering.jpg" alt="Catering dish presentation" fill className="object-cover" />
               </div>
               <div className="relative h-[180px] md:h-[230px] rounded-xl overflow-hidden border border-[#e6e1d5]">
-                <Image src="/Catering2.webp" alt="Catering platter setup" fill className="object-cover" />
+                <Image src="/catering2.jpg" alt="Catering platter setup" fill className="object-cover" />
               </div>
               <div className="relative h-[180px] md:h-[230px] rounded-xl overflow-hidden border border-[#e6e1d5] col-span-2">
-                <Image src="/reception.jpg" alt="Event catering setup" fill className="object-cover" />
+                <Image src="/catering3.jpg" alt="Event catering setup" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
                 <p className="absolute left-4 bottom-4 text-white text-sm md:text-base uppercase tracking-[0.12em] font-semibold">
                   Premium Service Flow

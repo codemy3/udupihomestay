@@ -208,7 +208,9 @@ export default function StaysPage() {
                 href={`/${stay.route}`} 
                 key={stay.id}
                 data-index={index}
-                className={`fade-in-card delay-${Math.min(index % 3 + 1, 6)} ${visibleCards.has(index) ? 'visible' : ''}`}
+                className={`fade-in-card delay-${Math.min(index % 3 + 1, 6)} ${visibleCards.has(index) ? 'visible' : ''} ${
+                  index === 6 ? 'md:col-span-2 lg:col-span-3' : ''
+                }`}
               >
                 <div className="royal-corners diagonal-accent shine-sweep group h-full bg-white border-2 border-[#e5dfd6] transition-all duration-500 hover:border-[#849826] hover:shadow-2xl hover:shadow-[#849826]/20 hover:-translate-y-3 cursor-pointer relative">
                   

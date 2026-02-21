@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { Car, Wifi, Bell, Key, Utensils, Waves, Phone } from 'lucide-react';
 
 const facilities = [
@@ -93,7 +93,7 @@ function StatRow({ stat, active, index, compact }: {
    - On tablet (md–lg): medium, scale 0.88
    - On desktop (lg+): full size
 ═══════════════════════════════════════════════ */
-function PriceTag({ active }: { active: boolean }) {
+export function PriceTag({ active }: { active: boolean }) {
   return (
     <AnimatePresence>
       {active && (
@@ -228,7 +228,7 @@ function PriceTag({ active }: { active: boolean }) {
                   <div
                     className="relative"
                     style={{
-                      width: '110px',
+                      width: '122px',
                       clipPath: 'polygon(0% 0%, 100% 0%, 100% calc(100% - 22px), 50% 100%, 0% calc(100% - 22px))',
                       background: 'linear-gradient(160deg, #2a3318 0%, #1e2810 40%, #253015 70%, #1a1e0c 100%)',
                       paddingBottom: '32px',
@@ -357,17 +357,10 @@ function PriceTag({ active }: { active: boolean }) {
    MAIN COMPONENT
 ═══════════════════════════════════ */
 export default function FacilitiesSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView   = useInView(sectionRef, { once: false, margin: '-5% 0px -5% 0px' });
-
   return (
     <section
-      ref={sectionRef}
       className="relative bg-[#fdfbf7] py-8 md:py-20 lg:py-28 overflow-visible"
     >
-      {/* 3D Price tag — visible on ALL screen sizes, scales down on mobile */}
-      <PriceTag active={isInView} />
-
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-20 lg:items-center gap-8 md:gap-12">
 

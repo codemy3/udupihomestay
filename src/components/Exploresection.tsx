@@ -159,8 +159,8 @@ function PolaroidCard({
         top: -13,
         left: "50%",
         transform: "translateX(-50%) rotate(-1.5deg)",
-        width: 60,
-        height: 22,
+        width: "clamp(60px, 5.8vw, 94px)",
+        height: "clamp(22px, 2.3vw, 36px)",
         background: "rgba(255,245,200,0.80)",
         borderRadius: 2,
         boxShadow: "0 1px 4px rgba(100,80,0,0.13)",
@@ -171,8 +171,8 @@ function PolaroidCard({
       {/* Frame */}
       <div style={{
         background: "#fffef9",
-        padding: "9px 9px 36px 9px",
-        width: 158,
+        padding: "10px 10px 42px 10px",
+        width: "clamp(158px, 17vw, 286px)",
         borderRadius: 3,
         border: "1px solid rgba(132,152,38,0.18)",
       }}>
@@ -180,7 +180,7 @@ function PolaroidCard({
         <div style={{
           background: meta.photoGradient,
           width: "100%",
-          height: 140,
+          height: "clamp(140px, 13.6vw, 246px)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -231,7 +231,7 @@ function PolaroidCard({
 
           {/* Number — larger, brighter with highlight */}
           <div style={{
-            fontSize: 46,
+            fontSize: "clamp(46px, 3.7vw, 74px)",
             fontWeight: 700,
             color: meta.accent,
             lineHeight: 1,
@@ -259,7 +259,7 @@ function PolaroidCard({
         {/* Caption */}
         <div style={{ paddingTop: 10, textAlign: "center" }}>
           <div style={{
-            fontSize: 10,
+            fontSize: "clamp(10px, 0.95vw, 13px)",
             letterSpacing: "0.18em",
             textTransform: "uppercase",
             color: "#5a5030",
@@ -448,7 +448,7 @@ export default function ExploreSection({ title, rooms, bathrooms, guests, priceP
           opacity: 0.6,
         }} />
 
-        <div style={{ maxWidth: 980, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: 1460, margin: "0 auto", position: "relative", zIndex: 1 }}>
           {/* Header */}
           <div style={{ textAlign: "center", marginBottom: 36 }}>
             <div style={{
@@ -498,7 +498,7 @@ export default function ExploreSection({ title, rooms, bathrooms, guests, priceP
               alignItems: "flex-end",
               justifyContent: "center",
               flexWrap: "wrap",
-              gap: "20px 28px",
+              gap: "24px 30px",
             }}
           >
             {polaroidMeta.map((meta, i) => (

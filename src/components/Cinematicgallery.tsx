@@ -193,7 +193,7 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
   if (isMobile === null) return null;
 
   // Layout
-  const cardW   = isMobile ? 170 : isTablet ? 205 : 248;
+  const cardW   = isMobile ? 340 : isTablet ? 205 : 248;
   const speeds  = isMobile ? [0.36, 0.26, 0.46] : isTablet ? [0.40, 0.28, 0.50] : [0.46, 0.33, 0.58];
   const headerH = isMobile ? 60 : isTablet ? 68 : 78;
   const stickyH = isMobile ? "100svh" : "100vh";
@@ -228,8 +228,11 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
       <section
         className="relative bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url(${spotSrcs[0] || "/last.avif"})`,
+          backgroundImage: 'url(/about-story.webp)',
           backgroundColor: "#f8f7f4",
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
         }}
       >
         <div className="absolute inset-0 bg-black/35 backdrop-blur-[2px]" />
@@ -238,11 +241,11 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
           ref={mobileContainerRef}
           className="relative z-10 flex h-screen w-full flex-col justify-center overflow-hidden"
         >
-          <div className="relative z-20 mb-6 w-full px-5 text-center">
+          <div className="relative z-20 mb-3 w-full px-5 text-center">
             <h2 className="text-3xl font-semibold uppercase tracking-[0.02em] text-white">
-              Cinematic Gallery
+              Gallery
             </h2>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.28em] text-white/90">
+            <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-white/90">
               {title}
             </p>
           </div>
@@ -257,7 +260,7 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
               return (
                 <div
                   key={`${label}-${index}`}
-                  className="relative shrink-0 overflow-hidden rounded-[24px] border border-white/20 transition-all duration-500"
+                  className="relative shrink-0 overflow-hidden rounded-[12px] border border-white/20 transition-all duration-500"
                   style={{
                     width: 320,
                     opacity: isCenter ? 1 : 0.88,
@@ -266,7 +269,7 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
                       : "0 14px 46px rgba(0,0,0,0.32)",
                   }}
                 >
-                  <div className="relative h-[190px] w-full overflow-hidden">
+                  <div className="relative h-[240px] w-full overflow-hidden">
                     <Image
                       src={spotSrcs[index]}
                       alt={label}
@@ -279,17 +282,17 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
                     />
                   </div>
 
-                  <div className="bg-black/45 p-5 backdrop-blur-md">
+                  <div className="bg-black/45 p-3 backdrop-blur-md">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#d6e08a]">
                       {String(index + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
                     </p>
                     <h3
-                      className="mt-2 text-[30px] leading-none text-white"
+                      className="mt-1 text-[30px] leading-none text-white"
                       style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 300 }}
                     >
                       {label}
                     </h3>
-                    <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/75">
+                    <p className="mt-1 text-[11px] uppercase tracking-[0.18em] text-white/75">
                       Swipe to explore
                     </p>
                   </div>
