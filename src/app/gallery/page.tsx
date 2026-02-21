@@ -105,9 +105,10 @@ const CSS = `
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--sans); font-size: 9px; letter-spacing: 0.38em;
   text-transform: uppercase; font-weight: 500; color: var(--cream);
+  line-height: 1.2;
   margin-bottom: 0.65rem;
 }
-.ms-hero-tag span { display: block; width: 28px; height: 1px; background: var(--gold); }
+.ms-hero-line { display: block; width: 28px; height: 1px; background: var(--gold); }
 .ms-hero-h1 {
   font-family: var(--serif); font-size: clamp(32px,7vw,78px);
   font-weight: 600; line-height: 1.0; color: var(--cream);
@@ -741,7 +742,8 @@ export default function GalleryPage() {
         </div>
         <div className="ms-hero-body">
           <div className="ms-hero-tag">
-            <span /><span>Visual Collection</span>
+            <span className="ms-hero-line" />
+            <span>Visual Collection</span>
           </div>
           <h1 className="ms-hero-h1">OUR GALLERY</h1>
           <div className="ms-hero-bc">
