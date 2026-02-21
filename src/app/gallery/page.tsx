@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { homestays } from "@/data/homestays";
 import { X, ChevronLeft, ChevronRight, MapPin, Camera, Eye } from "lucide-react";
 
@@ -110,10 +110,9 @@ const CSS = `
 .ms-hero-tag span { display: block; width: 28px; height: 1px; background: var(--gold); }
 .ms-hero-h1 {
   font-family: var(--serif); font-size: clamp(32px,7vw,78px);
-  font-weight: 700; line-height: 1.0; color: var(--cream);
+  font-weight: 600; line-height: 1.0; color: var(--cream);
   letter-spacing: 0.02em; text-transform: uppercase; margin-bottom: 0.5rem;
 }
-.ms-hero-h1 em { font-style: italic; color: var(--leaf); }
 .ms-hero-bc {
   display: flex; align-items: center; gap: 6px;
   font-family: var(--sans); font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.78);
@@ -257,6 +256,26 @@ const CSS = `
 /* tall cards */
 .ms-cimg.ms-h2 { aspect-ratio: 3/4; }
 
+.ms-cslide {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+  animation-duration: 340ms;
+  animation-timing-function: cubic-bezier(0.22,1,0.36,1);
+  animation-fill-mode: both;
+}
+.ms-cslide.ms-cslide-next { animation-name: msCardSlideInNext; }
+.ms-cslide.ms-cslide-prev { animation-name: msCardSlideInPrev; }
+
+@keyframes msCardSlideInNext {
+  from { opacity: 0.3; transform: translateX(20px) scale(1.02); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes msCardSlideInPrev {
+  from { opacity: 0.3; transform: translateX(-20px) scale(1.02); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
 .ms-cimg img { transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
 @media (hover: hover) { .ms-card:hover .ms-cimg img { transform: scale(1.06); } }
 
@@ -353,6 +372,40 @@ const CSS = `
   transition: color 0.22s, gap 0.22s;
 }
 @media (hover: hover) { .ms-card:hover .ms-cta { color: var(--leaf); gap: 6px; } }
+
+.ms-cnext {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.75);
+  background: rgba(15,15,15,0.38);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: transform 0.28s ease, background 0.22s ease, border-color 0.22s ease;
+  animation: msArrowNudge 1.7s ease-in-out infinite;
+  -webkit-tap-highlight-color: transparent;
+}
+@keyframes msArrowNudge {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-50%) translateX(3px); }
+}
+@media (min-width: 1024px) {
+  .ms-cnext { display: flex; }
+}
+.ms-cnext:hover {
+  background: rgba(132,152,38,0.9);
+  border-color: rgba(132,152,38,0.95);
+  transform: translateY(-50%) scale(1.05);
+}
 
 /* ═══ DIVIDER BAND ═══ */
 .ms-divband {
@@ -526,6 +579,11 @@ export default function GalleryPage() {
   const [scrollY, setScrollY]     = useState(0);
   const [visible, setVisible]     = useState<Set<string>>(new Set());
   const [activeFilter, setFilter] = useState("all");
+  const [cardImageIdx, setCardImageIdx] = useState<Record<string, number>>({});
+  const [cardAnimDir, setCardAnimDir] = useState<Record<string, 1 | -1>>({});
+  const [isMobileCards, setIsMobileCards] = useState(false);
+  const cardTouchStartRef = useRef<Record<string, number>>({});
+  const suppressCardOpenRef = useRef<Record<string, boolean>>({});
 
   useEffect(() => {
     const id = "ms-styles";
@@ -534,6 +592,13 @@ export default function GalleryPage() {
     el.id = id; el.textContent = CSS;
     document.head.appendChild(el);
     return () => { document.getElementById(id)?.remove(); };
+  }, []);
+
+  useEffect(() => {
+    const syncViewport = () => setIsMobileCards(window.innerWidth < 1024);
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => window.removeEventListener("resize", syncViewport);
   }, []);
 
   useEffect(() => {
@@ -605,6 +670,34 @@ export default function GalleryPage() {
     window.addEventListener("touchend", onEnd, { once: true });
   }, [goTo]);
 
+  const shiftCardImage = useCallback((stayId: string, imgCount: number, dir: 1 | -1) => {
+    if (imgCount < 2) return;
+    setCardAnimDir((prev) => ({ ...prev, [stayId]: dir }));
+    setCardImageIdx((prev) => {
+      const current = prev[stayId] ?? 0;
+      return { ...prev, [stayId]: (current + dir + imgCount) % imgCount };
+    });
+  }, []);
+
+  const onCardTouchStart = useCallback((stayId: string, e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobileCards) return;
+    cardTouchStartRef.current[stayId] = e.touches[0].clientX;
+    suppressCardOpenRef.current[stayId] = false;
+  }, [isMobileCards]);
+
+  const onCardTouchEnd = useCallback((stayId: string, imgCount: number, e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobileCards || imgCount < 2) return;
+    const startX = cardTouchStartRef.current[stayId];
+    if (typeof startX !== "number") return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) < 36) return;
+    suppressCardOpenRef.current[stayId] = true;
+    shiftCardImage(stayId, imgCount, dx < 0 ? 1 : -1);
+    window.setTimeout(() => {
+      suppressCardOpenRef.current[stayId] = false;
+    }, 230);
+  }, [isMobileCards, shiftCardImage]);
+
   const filtered = activeFilter === "all"
     ? homestays
     : homestays.filter((h) => h.id === activeFilter);
@@ -623,7 +716,7 @@ export default function GalleryPage() {
           <div className="ms-hero-tag">
             <span /><span>Visual Collection</span>
           </div>
-          <h1 className="ms-hero-h1">OUR <em>GALLERY</em></h1>
+          <h1 className="ms-hero-h1">OUR GALLERY</h1>
           <div className="ms-hero-bc">
             <span className="ms-bc-dim">HOME</span>
             <span className="ms-bc-gold"> › </span>
@@ -686,17 +779,43 @@ export default function GalleryPage() {
         {filtered.map((stay, idx) => {
           const imgs  = getImages(stay);
           const span  = getSpan(idx, imgs.length);
+          const cardIdx = cardImageIdx[stay.id] ?? 0;
+          const activeCardIdx = ((cardIdx % imgs.length) + imgs.length) % imgs.length;
+          const cardDir = cardAnimDir[stay.id] ?? 1;
           const words = stay.title.split(" ");
           const last  = words[words.length - 1];
           const rest  = words.slice(0, -1).join(" ");
           return (
-            <div key={stay.id} className="ms-card" onClick={() => openModal(stay)}>
-              <div className={`ms-cimg ms-h${span}`}>
-                <Image src={imgs[0]} alt={stay.title} fill className="object-cover" priority={idx < 4} />
+            <div
+              key={stay.id}
+              className="ms-card"
+              onClick={() => {
+                if (suppressCardOpenRef.current[stay.id]) return;
+                openModal(stay);
+              }}
+            >
+              <div
+                className={`ms-cimg ms-h${span}`}
+                onTouchStart={(e) => onCardTouchStart(stay.id, e)}
+                onTouchEnd={(e) => onCardTouchEnd(stay.id, imgs.length, e)}
+              >
+                <div key={`${stay.id}-${activeCardIdx}`} className={`ms-cslide${cardDir === 1 ? " ms-cslide-next" : " ms-cslide-prev"}`}>
+                  <Image src={imgs[activeCardIdx]} alt={stay.title} fill className="object-cover" priority={idx < 4} />
+                </div>
                 <div className="ms-cgrad" />
                 <div className="ms-pill"><Camera size={9} />{imgs.length} photos</div>
                 <div className="ms-tag">{stay.subtitle}</div>
                 <div className="ms-eye"><div className="ms-eye-ring"><Eye size={16} /></div></div>
+                <button
+                  className="ms-cnext"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    shiftCardImage(stay.id, imgs.length, 1);
+                  }}
+                  aria-label={`Next photo for ${stay.title}`}
+                >
+                  <ChevronRight size={15} />
+                </button>
                 <div className="ms-ctitle">
                   <h3>{rest && <>{rest} </>}<em>{last}</em></h3>
                   <div className="ms-gbar" />

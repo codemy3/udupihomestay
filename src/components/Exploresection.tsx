@@ -338,27 +338,36 @@ export default function ExploreSection({ title, rooms, bathrooms, guests, priceP
           }
           /* Mobile default: larger cards while keeping all four visible */
           .polaroid-scale-wrap {
-            width: 76px !important;
-            /* Height = natural card height (215px) * scale (0.48) ≈ 103px */
-            height: 103px !important;
+            width: 86px !important;
+            /* Height = natural card height (215px) * scale (0.54) ≈ 117px */
+            height: 117px !important;
             display: flex !important;
             align-items: flex-end !important;
             justify-content: center !important;
             overflow: visible !important;
           }
           .polaroid-scale-inner {
-            transform: scale(0.48) !important;
+            transform: scale(0.54) !important;
             transform-origin: bottom center !important;
             flex-shrink: 0 !important;
           }
         }
         @media (max-width: 380px) {
           .polaroid-scale-wrap {
-            width: 68px !important;
-            height: 92px !important;
+            width: 80px !important;
+            height: 109px !important;
           }
           .polaroid-scale-inner {
-            transform: scale(0.43) !important;
+            transform: scale(0.51) !important;
+          }
+        }
+        @media (max-width: 340px) {
+          .polaroid-scale-wrap {
+            width: 72px !important;
+            height: 98px !important;
+          }
+          .polaroid-scale-inner {
+            transform: scale(0.46) !important;
           }
         }
       `}</style>

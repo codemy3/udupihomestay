@@ -439,8 +439,8 @@ export default function AboutPage() {
                 <p className="text-gray-600 text-sm">Udupi, Karnataka, India</p>
               </div>
 
-              {/* Stats */}
-             {/* <div data-animate="stats" className={`grid grid-cols-3 gap-6 pt-4 stagger ${visibleSections.has('stats') ? 'visible' : ''}`}>
+              {/* Stats (mobile only) */}
+              <div data-animate="stats" className={`grid grid-cols-3 gap-6 pt-4 stagger sm:hidden ${visibleSections.has('stats') ? 'visible' : ''}`}>
                 <div className="flex flex-col items-center text-center">
                   <div className="text-4xl sm:text-5xl font-bold font-serif text-[#849826] mb-1">
                     {counters.properties}+
@@ -459,7 +459,7 @@ export default function AboutPage() {
                   </div>
                   <p className="text-[#2c2c2c] font-semibold text-xs sm:text-sm">Years Experience</p>
                 </div>
-              </div>*/}
+              </div>
 
               <button className="mt-2 bg-[#849826] text-white px-8 py-3.5 hover:bg-[#6d7d20] transition-all duration-300 uppercase text-xs tracking-widest font-medium shine-effect">
                 LEARN MORE
