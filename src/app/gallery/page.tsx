@@ -407,6 +407,33 @@ const CSS = `
   transform: translateY(-50%) scale(1.05);
 }
 
+.ms-cswipe {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.78);
+  background: rgba(15,15,15,0.38);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  animation: msSwipeLeftHint 1.45s ease-in-out infinite;
+}
+@keyframes msSwipeLeftHint {
+  0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.9; }
+  50% { transform: translateY(-50%) translateX(-6px); opacity: 1; }
+}
+@media (min-width: 1024px) {
+  .ms-cswipe { display: none; }
+}
+
 /* ═══ DIVIDER BAND ═══ */
 .ms-divband {
   background: var(--parchment);
@@ -806,6 +833,9 @@ export default function GalleryPage() {
                 <div className="ms-pill"><Camera size={9} />{imgs.length} photos</div>
                 <div className="ms-tag">{stay.subtitle}</div>
                 <div className="ms-eye"><div className="ms-eye-ring"><Eye size={16} /></div></div>
+                <div className="ms-cswipe" aria-hidden="true">
+                  <ChevronLeft size={15} />
+                </div>
                 <button
                   className="ms-cnext"
                   onClick={(e) => {
