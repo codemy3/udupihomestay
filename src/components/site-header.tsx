@@ -183,7 +183,7 @@ export default function SiteHeader() {
         onClick={() => setMobileMenuOpen(false)}
       >
         <div
-          className={`fixed right-0 top-0 h-screen w-full max-w-xs bg-gradient-to-b from-[#1a1a1a] to-[#0d0d0d] backdrop-blur-xl border-l border-white/15 z-50 flex flex-col shadow-2xl transform transition-transform duration-300 ease-out ${
+          className={`fixed right-0 top-0 h-screen w-full max-w-xs bg-[#849826] backdrop-blur-xl border-l border-white/15 z-50 flex flex-col shadow-2xl transform transition-transform duration-300 ease-out ${
             mobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
           onClick={(e) => e.stopPropagation()}
