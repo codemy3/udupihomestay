@@ -2,6 +2,8 @@
 
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 interface CinematicGalleryProps {
   images: string[];
@@ -10,6 +12,8 @@ interface CinematicGalleryProps {
 
 const ROOM_LABELS = ["Front View", "Hall", "Kitchen", "Bedroom", "Play Area"];
 const N = ROOM_LABELS.length;
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ── Auto-scroll row ───────────────────────────────────────────────────────────
 function ScrollRow({ items, direction, speed, cardW }: {
@@ -60,11 +64,14 @@ function ScrollRow({ items, direction, speed, cardW }: {
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function CinematicGallery({ images, title }: CinematicGalleryProps) {
   const outerRef    = useRef<HTMLDivElement>(null);
+  const mobileContainerRef = useRef<HTMLDivElement>(null);
+  const mobileTrackRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const [isTablet, setIsTablet] = useState(false);
   const [entered,  setEntered]  = useState(false);
   // Which card is currently popped up
   const [activeCard, setActiveCard] = useState(0);
+  const [mobileCenterCard, setMobileCenterCard] = useState(0);
 
   useEffect(() => {
     const check = () => {
@@ -124,10 +131,63 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
 
   useEffect(() => {
     if (!isMobile) return;
-    const timer = window.setInterval(() => {
-      setActiveCard((prev) => (prev + 1) % N);
-    }, 2600);
-    return () => window.clearInterval(timer);
+    const container = mobileContainerRef.current;
+    const track = mobileTrackRef.current;
+    if (!container || !track) return;
+
+    const cards = Array.from(track.children) as HTMLElement[];
+    if (cards.length === 0) return;
+
+    const updateCenterCard = () => {
+      const viewportCenter = window.innerWidth / 2;
+      let closestIndex = 0;
+      let minDistance = Infinity;
+
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(cardCenter - viewportCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setMobileCenterCard((prev) => (prev === closestIndex ? prev : closestIndex));
+    };
+
+    const trackWidth = track.scrollWidth;
+    const viewportWidth = window.innerWidth;
+    const scrollDistance = trackWidth - viewportWidth;
+
+    if (scrollDistance <= 0) {
+      updateCenterCard();
+      return;
+    }
+
+    gsap.set(track, { x: 0 });
+
+    const tween = gsap.to(track, {
+      x: -scrollDistance,
+      ease: "none",
+      scrollTrigger: {
+        trigger: container,
+        start: "top top",
+        end: `+=${scrollDistance * 1.5}`,
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: updateCenterCard,
+      },
+    });
+
+    requestAnimationFrame(updateCenterCard);
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
   }, [isMobile]);
 
   if (isMobile === null) return null;
@@ -165,192 +225,91 @@ export default function CinematicGallery({ images, title }: CinematicGalleryProp
 
   if (isMobile) {
     return (
-      <section className="bg-white py-4">
+      <section
+        className="relative bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${spotSrcs[0] || "/last.avif"})`,
+          backgroundColor: "#f8f7f4",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/35 backdrop-blur-[2px]" />
+
         <div
-          className="relative mx-auto w-[calc(100%-16px)] max-w-[420px] overflow-hidden rounded-2xl border border-[#ece8de] shadow-xl"
-          style={{ height: "80svh", minHeight: 540, maxHeight: 760 }}
+          ref={mobileContainerRef}
+          className="relative z-10 flex h-screen w-full flex-col justify-center overflow-hidden"
         >
-          <div style={{
-            position: "absolute", top: 0, left: 0, right: 0, height: 3, zIndex: 60,
-            background: "linear-gradient(90deg,transparent,#849826 25%,#b8c830 50%,#849826 75%,transparent)",
-          }} />
-
-          <div style={{
-            position: "absolute", top: 0, left: 0, right: 0, zIndex: 40,
-            padding: "14px 14px 0",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            background: "linear-gradient(to bottom, rgba(255,255,255,.97) 55%, transparent)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 14, height: 1, background: "#849826" }} />
-              <span style={{
-                fontFamily: "'Cormorant Garamond',Georgia,serif",
-                fontSize: 9, letterSpacing: "0.3em",
-                textTransform: "uppercase", color: "#849826", fontWeight: 600,
-              }}>
-                Gallery
-              </span>
-              <div style={{ width: 14, height: 1, background: "#849826" }} />
-            </div>
-            <span style={{
-              fontFamily: "'Cormorant Garamond',Georgia,serif",
-              fontSize: "clamp(12px,3.8vw,16px)",
-              fontWeight: 300,
-              fontStyle: "italic",
-              color: "rgba(50,40,15,.48)",
-              letterSpacing: "0.05em",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "46%",
-              textAlign: "center",
-            }}>
+          <div className="relative z-20 mb-6 w-full px-5 text-center">
+            <h2 className="text-3xl font-semibold uppercase tracking-[0.02em] text-white">
+              Cinematic Gallery
+            </h2>
+            <p className="mt-2 text-[11px] uppercase tracking-[0.28em] text-white/90">
               {title}
-            </span>
-            <span style={{
-              fontSize: 8, letterSpacing: "0.22em",
-              textTransform: "uppercase", color: "rgba(132,152,38,.75)",
-              fontFamily: "ui-sans-serif,system-ui,sans-serif",
-              whiteSpace: "nowrap",
-            }}>
-              auto
-            </span>
+            </p>
           </div>
 
-          <div style={{
-            position: "absolute", top: headerH, bottom: 0, left: 0, right: 0,
-            display: "flex", flexDirection: "column", gap: 5,
-          }}>
-            {rowData.map((row, ri) => (
-              <div key={ri} style={{ flex: 1, minHeight: 0 }}>
-                <ScrollRow
-                  items={row}
-                  direction={ri % 2 === 1 ? "right" : "left"}
-                  speed={speeds[ri] ?? 0.35}
-                  cardW={cardW}
-                />
-              </div>
-            ))}
+          <div
+            ref={mobileTrackRef}
+            className="relative z-20 flex items-center gap-3 px-4"
+            style={{ willChange: "transform" }}
+          >
+            {ROOM_LABELS.map((label, index) => {
+              const isCenter = index === mobileCenterCard;
+              return (
+                <div
+                  key={`${label}-${index}`}
+                  className="relative shrink-0 overflow-hidden rounded-[24px] border border-white/20 transition-all duration-500"
+                  style={{
+                    width: 320,
+                    opacity: isCenter ? 1 : 0.88,
+                    boxShadow: isCenter
+                      ? "0 24px 80px rgba(0,0,0,0.5)"
+                      : "0 14px 46px rgba(0,0,0,0.32)",
+                  }}
+                >
+                  <div className="relative h-[190px] w-full overflow-hidden">
+                    <Image
+                      src={spotSrcs[index]}
+                      alt={label}
+                      fill
+                      className="object-cover transition-transform duration-500"
+                      style={{
+                        filter: "brightness(0.78)",
+                        transform: isCenter ? "scale(1.12)" : "scale(1)",
+                      }}
+                    />
+                  </div>
+
+                  <div className="bg-black/45 p-5 backdrop-blur-md">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#d6e08a]">
+                      {String(index + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
+                    </p>
+                    <h3
+                      className="mt-2 text-[30px] leading-none text-white"
+                      style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 300 }}
+                    >
+                      {label}
+                    </h3>
+                    <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-white/75">
+                      Swipe to explore
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          <div style={{
-            position: "absolute",
-            top: "16%",
-            left: "8%",
-            width: "84%",
-            height: "62%",
-            borderRadius: "12px",
-            overflow: "hidden",
-            zIndex: 30,
-            boxShadow: "0 18px 52px rgba(0,0,0,0.6)",
-          }}>
-            <Image
-              src={spotSrcs[activeCard]}
-              alt={ROOM_LABELS[activeCard]}
-              fill
-              style={{
-                objectFit: "cover",
-                filter: "brightness(0.67) saturate(1.05)",
-              }}
-              priority
-            />
-
-            <div style={{
-              position: "absolute", bottom: 0, left: 0, right: 0, height: "62%",
-              background: "linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.18) 65%, transparent 100%)",
-              pointerEvents: "none",
-            }} />
-            <div style={{
-              position: "absolute", top: 0, left: 0, right: 0, height: "28%",
-              background: "linear-gradient(to bottom, rgba(0,0,0,.48) 0%, transparent 100%)",
-              pointerEvents: "none",
-            }} />
-            <div style={{
-              position: "absolute", top: 0, left: 0, right: 0, height: 2,
-              background: "linear-gradient(90deg,transparent,#849826 30%,#b8c830 50%,#849826 70%,transparent)",
-              pointerEvents: "none",
-            }} />
-
-            <div style={{
-              position: "absolute",
-              bottom: "6%",
-              left: "5%",
-              pointerEvents: "none",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}>
-                <div style={{ width: 14, height: 1, background: "#849826" }} />
-                <span style={{
-                  fontSize: 8, letterSpacing: "0.3em",
-                  textTransform: "uppercase", color: "#849826",
-                  fontFamily: "ui-sans-serif,system-ui,sans-serif", fontWeight: 700,
-                }}>
-                  {String(activeCard + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
-                </span>
-              </div>
-              <div style={{
-                fontFamily: "'Cormorant Garamond',Georgia,serif",
-                fontSize: "clamp(28px,9vw,44px)",
-                fontWeight: 300,
-                color: "#f5f0e0",
-                lineHeight: 0.95,
-                letterSpacing: "-0.015em",
-                textShadow: "0 2px 36px rgba(0,0,0,.6)",
-              }}>
-                {ROOM_LABELS[activeCard]}
-              </div>
-            </div>
-
-            <div style={{
-              position: "absolute",
-              top: "50%",
-              right: "4%",
-              transform: "translateY(-50%)",
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-              opacity: 0.55,
-              pointerEvents: "none",
-            }}>
-              {ROOM_LABELS.map((_, di) => (
-                <div key={di} style={{
-                  height: 1.5,
-                  width: di === activeCard ? 16 : 4,
-                  borderRadius: 1,
-                  background: di === activeCard ? "#849826" : "rgba(255,255,255,.22)",
-                  transition: "width 0.3s ease, background 0.3s ease",
-                }} />
-              ))}
-            </div>
-          </div>
-
-          <div style={{
-            position: "absolute", bottom: 10, left: "50%",
-            transform: "translateX(-50%)",
-            display: "flex", gap: 5, zIndex: 50,
-          }}>
-            {ROOM_LABELS.map((_, di) => (
-              <button
-                key={di}
-                onClick={() => setActiveCard(di)}
-                aria-label={`Show ${ROOM_LABELS[di]}`}
+          <div className="relative z-20 mt-5 flex justify-center gap-1.5">
+            {ROOM_LABELS.map((_, index) => (
+              <div
+                key={index}
+                className="h-[4px] rounded-full transition-all duration-300"
                 style={{
-                  height: 4,
-                  width: di === activeCard ? 16 : 4,
-                  borderRadius: 3,
-                  border: "none",
-                  background: di === activeCard ? "#849826" : "rgba(0,0,0,.14)",
-                  transition: "width 0.35s cubic-bezier(0.34,1.6,.64,1), background 0.3s ease",
-                  cursor: "pointer",
-                  padding: 0,
+                  width: index === mobileCenterCard ? 18 : 5,
+                  background: index === mobileCenterCard ? "#849826" : "rgba(255,255,255,0.32)",
                 }}
               />
             ))}
           </div>
-
-          <div style={{
-            position: "absolute", bottom: 0, left: 0, right: 0, height: 3, zIndex: 60,
-            background: "linear-gradient(90deg,transparent,#849826 25%,#b8c830 50%,#849826 75%,transparent)",
-          }} />
         </div>
       </section>
     );

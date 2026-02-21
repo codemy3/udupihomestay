@@ -163,14 +163,6 @@ export default function StaysPage() {
           mask-composite: exclude;
         }
 
-        /* Table row hover */
-        .table-row-hover {
-          transition: all 0.3s;
-        }
-        .table-row-hover:hover {
-          background: linear-gradient(90deg, transparent, rgba(132, 152, 38, 0.08), transparent);
-          transform: translateX(8px);
-        }
       `}</style>
 
       {/* ═══════════════ HERO — SAME AS ABOUT PAGE ═══════════════ */}
@@ -276,18 +268,6 @@ export default function StaysPage() {
                       {stay.description}
                     </p>
 
-                    {/* Highlights with gold accents */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {stay.highlights.slice(0, 3).map((highlight, idx) => (
-                        <span 
-                          key={idx} 
-                          className="text-[10px] uppercase tracking-wider px-3 py-1.5 bg-gradient-to-r from-[#849826]/8 to-[#849826]/5 text-[#849826] border border-[#849826]/20 font-semibold"
-                        >
-                          {highlight}
-                        </span>
-                      ))}
-                    </div>
-
                     {/* Divider with center accent */}
                     <div className="flex items-center gap-3 mb-6">
                       <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#849826]/30" />
@@ -309,109 +289,6 @@ export default function StaysPage() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ COMPARISON TABLE — ROYAL DESIGN ═══════════════ */}
-      <section className="py-20 bg-gradient-to-b from-[#fdfbf7] via-[#f8f6f0] to-[#fdfbf7] relative">
-        {/* Decorative texture */}
-        <div 
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #849826 1.5px, transparent 1.5px)',
-            backgroundSize: '40px 40px',
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header with ornate design */}
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#849826]" />
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-[#849826] rotate-45" />
-                <p className="text-[#849826] text-xs tracking-[0.35em] uppercase font-bold">
-                  Property Comparison
-                </p>
-                <div className="w-1.5 h-1.5 bg-[#849826] rotate-45" />
-              </div>
-              <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#849826]" />
-            </div>
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[#2c2c2c] mb-4">
-              Find Your <span className="text-[#849826] italic">Perfect</span> Sanctuary
-            </h2>
-            <p className="font-body text-gray-600 text-lg max-w-2xl mx-auto">
-              Compare our distinguished properties to discover which estate resonates with your vision of luxury
-            </p>
-          </div>
-
-          {/* Premium table with gold accents */}
-          <div className="bg-white border-4 border-[#849826]/20 overflow-hidden shadow-2xl">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gradient-to-r from-[#849826] via-[#9db02d] to-[#849826]">
-                    <th className="text-left py-6 px-8 text-white font-display font-bold text-base uppercase tracking-wider border-r border-white/10">
-                      Estate
-                    </th>
-                    <th className="text-center py-6 px-6 text-white/95 font-semibold text-sm uppercase border-r border-white/10">
-                      Chambers
-                    </th>
-                    <th className="text-center py-6 px-6 text-white/95 font-semibold text-sm uppercase border-r border-white/10">
-                      Capacity
-                    </th>
-                    <th className="text-center py-6 px-6 text-white/95 font-semibold text-sm uppercase border-r border-white/10">
-                      Baths
-                    </th>
-                    <th className="text-right py-6 px-8 text-white/95 font-semibold text-sm uppercase">
-                      Nightly Rate
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {homestays.map((stay, idx) => (
-                    <tr 
-                      key={stay.id} 
-                      className={`table-row-hover border-b border-[#e5dfd6] ${
-                        idx % 2 === 0 ? 'bg-white' : 'bg-[#fdfbf7]'
-                      }`}
-                    >
-                      <td className="py-6 px-8 border-r border-[#e5dfd6]">
-                        <div className="font-display font-bold text-[#2c2c2c] text-lg">{stay.title}</div>
-                        <div className="text-xs text-[#849826] uppercase tracking-wide mt-1 font-semibold">{stay.subtitle}</div>
-                      </td>
-                      <td className="py-6 px-6 text-center text-gray-700 font-semibold border-r border-[#e5dfd6]">
-                        {stay.rooms}
-                      </td>
-                      <td className="py-6 px-6 text-center text-gray-700 font-semibold border-r border-[#e5dfd6]">
-                        {stay.guests}
-                      </td>
-                      <td className="py-6 px-6 text-center text-gray-700 font-semibold border-r border-[#e5dfd6]">
-                        {stay.bathrooms}
-                      </td>
-                      <td className="py-6 px-8 text-right">
-                        <span className="font-display font-bold text-[#849826] text-xl">
-                          ₹{stay.pricePerNight.toLocaleString()}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Footer note with decorative elements */}
-          <div className="mt-8 text-center">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <div className="w-12 h-px bg-[#849826]/30" />
-              <div className="w-1.5 h-1.5 bg-[#849826] rotate-45" />
-              <div className="w-12 h-px bg-[#849826]/30" />
-            </div>
-            <p className="font-body text-sm text-gray-500 italic">
-              All properties include curated breakfast, premium amenities, and dedicated concierge services
-            </p>
           </div>
         </div>
       </section>
