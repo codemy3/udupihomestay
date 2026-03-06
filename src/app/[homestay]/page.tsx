@@ -30,25 +30,36 @@ const homestayVideos: Record<string, string> = {
 
 const homestayImages: Record<string, string[]> = {
   whitehouse:    [
-    "/whitehouse/12.webp", "/whitehouse/4.webp",  "/whitehouse/11.webp",
-    "/whitehouse/8.webp",  "/whitehouse/2.webp",  "/whitehouse/h3.webp",
-    "/whitehouse/h2.webp", "/whitehouse/6.webp",
+    "/whitehouse/new/12.webp", "/whitehouse/new/4.webp",  "/whitehouse/new/11.webp",
+    "/whitehouse/new/8.webp",  "/whitehouse/new/2.webp",  "/whitehouse/new/h3.webp",
+    "/whitehouse/new/h2.webp", "/whitehouse/new/6.webp",
   ],
-  gardenvilla:   Array.from({ length: 11 }, (_, i) =>
-    i < 9 ? `/Cottage/${i + 1}.webp` : `/whitehouse/${i - 8}.webp`
-  ),
-  cottagehouse:  Array.from({ length: 11 }, (_, i) => `/Cottage/${i + 1}.webp`),
-  topvilla:      Array.from({ length: 8 },  (_, i) => `/hilltop/${i + 1}.webp`),
-  sunrisehome:   Array.from({ length: 15 }, (_, i) =>
-    i < 9 ? `/sunrise/${i + 1}.webp` : `/sunrise/S${i - 8}.webp`
-  ),
+  gardenvilla:   Array.from({ length: 11 }, (_, i) => `/gradernVilla/new/${i + 1}.webp`),
+  cottagehouse:  [
+    "/Cottage/new/1.webp",
+    "/Cottage/new/_DSC3682.webp",
+    "/Cottage/new/_DSC3691.webp",
+    "/Cottage/new/_DSC3692.webp",
+  ],
+  topvilla:      [
+    "/hilltop/new/_DSC3635.webp",
+    "/hilltop/new/_DSC3643.webp",
+  ],
+  sunrisehome:   [
+    "/sunrise/new/_DSC3534.webp",
+    "/sunrise/new/_DSC3596.webp",
+    "/sunrise/new/_DSC3602.webp",
+    "/sunrise/new/_DSC3603.webp",
+    "/sunrise/new/_DSC3605.webp",
+    "/sunrise/new/_DSC3607.webp",
+  ],
   chaletlabonne: [
-    '/chalet/new/1.JPG', '/chalet/new/2.webp', '/chalet/new/3.JPG',
-    '/chalet/new/4.JPG', '/chalet/new/5.JPG', '/chalet/new/bedroom.webp',
-    '/chalet/new/hall2.JPG', '/chalet/new/kitchen2.JPG', '/chalet/new/kitchen3.JPG',
-    '/chalet/new/scene2.JPG', '/chalet/new/scene3.JPG'
+    '/chalet/new/1.webp', '/chalet/new/2.webp', '/chalet/new/3.webp',
+    '/chalet/new/4.webp', '/chalet/new/5.webp', '/chalet/new/bedroom.webp',
+    '/chalet/new/hall2.webp', '/chalet/new/kitchen2.webp', '/chalet/new/kitchen3.webp',
+    '/chalet/new/scene2.webp', '/chalet/new/scene3.webp'
   ],
-  viewpoint:     Array.from({ length: 10 }, (_, i) => `/view/${i + 1}.webp`),
+  viewpoint:     Array.from({ length: 10 }, (_, i) => `/view/new/${i + 1}.webp`),
 };
 
 const homestayMeta: Record<string, { price: number; tags: string[] }> = {
@@ -89,7 +100,7 @@ export default function HomestayPage() {
 
   const rk        = routeKey(homestay.route);
   const images    = homestayImages[rk] || [];
-  const heroImage = rk === "whitehouse" ? "/whitetop.webp" : (images[0] || "/last.avif");
+  const heroImage = images[0] || "/last.avif";
   const video     = homestayVideos[rk] || "/video/homestay-showcase.mp4";
 
   return (

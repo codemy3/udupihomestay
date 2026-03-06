@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Phone, Menu, X } from "lucide-react";
 
 const navItems = [
@@ -14,6 +15,7 @@ const navItems = [
 ];
 
 export default function SiteHeader() {
+  const pathname = usePathname();
   // Default to false so text is white on load (over hero)
   const [isOverWhite, setIsOverWhite] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -55,7 +57,22 @@ export default function SiteHeader() {
       return false;
     };
 
+    const getHeroThreshold = () => {
+      const firstSection = document.querySelector("main section") as HTMLElement | null;
+      if (!firstSection) return 100;
+
+      const heroHeight = firstSection.getBoundingClientRect().height;
+      if (!heroHeight || Number.isNaN(heroHeight)) return 100;
+
+      return Math.max(100, Math.min(heroHeight * 0.72, 460));
+    };
+
     const handleScroll = () => {
+      if (window.scrollY < getHeroThreshold()) {
+        setIsOverWhite(false);
+        return;
+      }
+
       const navbar = document.querySelector('header');
       if (!navbar) return;
 
@@ -83,12 +100,8 @@ export default function SiteHeader() {
       setIsOverWhite(lightCount >= 2);
     };
 
-    // On first load, force white text if hero is visible
-    if (window.scrollY < 100) {
-      setIsOverWhite(false);
-    } else {
-      handleScroll();
-    }
+    // On first load and route changes, enforce hero-aware color
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
     
@@ -100,7 +113,7 @@ export default function SiteHeader() {
       window.removeEventListener('resize', handleScroll);
       clearTimeout(timer);
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <header className="fixed top-2 left-1/2 z-50 -translate-x-1/2 w-[95%] max-w-350 transition-all duration-500">

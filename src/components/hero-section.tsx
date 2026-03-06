@@ -13,13 +13,13 @@ export default function HeroSection() {
 
   // 7 Homestays total
   const facilities = [
-    { img: "/whitehouse.webp", title: "White House" },
-    { img: "/gardenvilla.webp", title: "Garden Villa" },
-    { img: "/cottagehouse.webp", title: "Cottage House" },
-    { img: "/hilltopvilla.webp", title: "Hilltop Villa" },
-    { img: "/sunrise home.webp", title: "Sunrise Home" },
-    { img: "/chaletlabonnevie.webp", title: "Chalet La Bonne Vie" },
-    { img: "/viewpoint.webp", title: "Viewpoint" },
+    { img: "/whitehouse/new/1.webp", title: "White House" },
+    { img: "/gradernVilla/new/1.webp", title: "Garden Villa" },
+    { img: "/Cottage/new/1.webp", title: "Cottage House" },
+    { img: "/hilltop/new/_DSC3635.webp", title: "Hilltop Villa" },
+    { img: "/sunrise/new/_DSC3534.webp", title: "Sunrise Home" },
+    { img: "/chalet/new/1.webp", title: "Chalet La Bonne Vie" },
+    { img: "/view/new/1.webp", title: "Viewpoint" },
   ];
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function HeroSection() {
       ref={containerRef}
       className="hero-section-1 hero-1 relative h-[88svh] md:min-h-screen overflow-hidden bg-cover bg-center pt-[32px] sm:pt-[50px] md:pt-[80px] lg:pt-[100px] xxl:pt-[120px] pb-[12px] md:pb-[20px]"
       style={{
-        backgroundImage: "url(/viewpoint.webp)",
+        backgroundImage: "url(/hero.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

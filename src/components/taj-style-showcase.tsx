@@ -3,28 +3,32 @@
 import { useRef, useEffect, useState } from 'react';
 import { useIsMobile } from '@/lib/useIsMobile';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const homestays = [
   {
     id: 1,
     title: 'Chalet La Bonne Vie',
     description: 'Experience alpine charm and cozy comfort in our exclusive chalet',
-    image: '/chalet/new/1.JPG',
+    image: '/chalet/new/1.webp',
     alt: 'Chalet',
+    route: '/ChaletLabonne',
   },
   {
     id: 2,
     title: 'Cottage House',
     description: 'A quaint and charming cottage retreat perfect for intimate getaways',
-    image: '/Cottage/h1.webp',
+    image: '/Cottage/new/1.webp',
     alt: 'Cottage',
+    route: '/CottageHouse',
   },
   {
     id: 3,
     title: 'Garden Villa',
     description: 'Luxurious villa surrounded by lush gardens and tranquil landscapes',
-    image: '/gradernVilla/h1.webp',
+    image: '/gradernVilla/new/1.webp',
     alt: 'Garden Villa',
+    route: '/GardenVilla',
   },
 ];
 
@@ -82,8 +86,9 @@ export default function HomestaysStickyScroll() {
           {/* Cards Grid */}
           <div className="space-y-8">
             {homestays.map((homestay, index) => (
-              <div
+              <Link
                 key={homestay.id}
+                href={homestay.route}
                 className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300"
               >
                 {/* Image */}
@@ -111,11 +116,11 @@ export default function HomestaysStickyScroll() {
                   <p className="text-gray-600 text-base leading-relaxed mb-4">
                     {homestay.description}
                   </p>
-                  <button className="px-6 py-2.5 bg-[#849826] hover:bg-[#9B8B6B] text-white rounded-lg font-medium transition-all duration-300">
+                  <span className="inline-flex px-6 py-2.5 bg-[#849826] hover:bg-[#9B8B6B] text-white rounded-lg font-medium transition-all duration-300">
                     View Details
-                  </button>
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -182,7 +187,8 @@ export default function HomestaysStickyScroll() {
               {/* Card Container with padding */}
               <div className="absolute inset-6 lg:inset-8 xl:inset-12">
                 {/* Card with rounded corners and shadow */}
-                <div 
+                <Link 
+                  href={homestay.route}
                   className={`relative h-full w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 group ${
                     isActive ? 'shadow-[0_0_40px_rgba(132,152,38,0.3)]' : ''
                   }`}
@@ -216,16 +222,16 @@ export default function HomestaysStickyScroll() {
                     </p>
                     
                     {/* View Details Button */}
-                    <button className="mt-8 px-8 py-3 bg-[#849826] hover:bg-[#9B8B6B] text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    <span className="inline-flex mt-8 px-8 py-3 bg-[#849826] hover:bg-[#9B8B6B] text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
                       View Details
-                    </button>
+                    </span>
                   </div>
                   
                   {/* Card Number Badge */}
                   <div className="absolute top-8 right-8 bg-white/10 backdrop-blur-md rounded-full w-16 h-16 flex items-center justify-center">
                     <span className="text-white text-2xl font-bold">{index + 1}</span>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           );

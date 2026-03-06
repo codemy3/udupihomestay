@@ -66,7 +66,7 @@ export const homestays: Homestay[] = [
     title: "GARDEN VILLA",
     subtitle: "Spacious Bedrooms Paradise",
     route: "GardenVilla",
-    image: "/gardenvilla.webp",
+    image: "/gradernVilla/new/1.webp",
     description: "Spacious 5BHK Udupi homestay for families, accommodating up to 20 guests with 6 modern bathrooms and garden views.",
     longDescription: "Garden Villa is a family homestay in Udupi designed for relaxed group stays, intimate events, and comfortable long weekends. With 5 spacious bedrooms and 6 bathrooms, landscaped outdoor spaces, and thoughtful amenities, it is a top choice for travelers seeking a premium homestay in Udupi, Karnataka.",
     amenities: [
@@ -109,7 +109,7 @@ export const homestays: Homestay[] = [
     title: "COTTAGE HOUSE",
     subtitle: "Air-Conditioned 3BHK Villa",
     route: "CottageHouse",
-    image: "/cottagehouse.webp",
+    image: "/Cottage/new/1.webp",
     description: "AC 3-room cottage homestay near Udupi and Manipal, accommodating up to 8 guests with 4 modern bathrooms.",
     longDescription: "Cottage House is an AC homestay near Manipal University and Udupi, offering a practical blend of comfort, value, and privacy. With 3 well-appointed rooms and 4 bathrooms, this fully furnished stay is ideal for families and small groups searching for a comfortable homestay in Udupi with convenient access to city and campus.",
     amenities: [
@@ -152,7 +152,7 @@ export const homestays: Homestay[] = [
     title: "HILL TOP VILLA",
     subtitle: "Air-Conditioned 3BHK Villa",
     route: "TopVilla",
-    image: "/hilltopvilla.webp",
+    image: "/hilltop/new/_DSC3635.webp",
     description: "Scenic AC 3BHK villa near Udupi and Manipal, accommodating up to 10 guests with 3 bathrooms and panoramic views.",
     longDescription: "Hill Top Villa offers a peaceful, elevated stay experience with panoramic views and modern comforts. This AC homestay in Udupi, Karnataka features 3 bedrooms and 3 bathrooms, well-suited for families and couples who want a calm weekend getaway near Manipal University while staying close to key Udupi attractions.",
     amenities: [
@@ -195,7 +195,7 @@ export const homestays: Homestay[] = [
     title: "SUNRISE HOME",
     subtitle: "3BHK Brick House",
     route: "SunriseHome",
-    image: "/sunrise home.webp",
+    image: "/sunrise/new/_DSC3534.webp",
     description: "Affordable 2BHK family homestay in Udupi, accommodating up to 6 guests with 3 bathrooms and cozy interiors.",
     longDescription: "Sunrise Home is an affordable family homestay in Udupi, Karnataka with 2 bedrooms and 3 bathrooms for guests who prefer a private, quiet setting. With comfortable rooms and practical amenities, it is ideal for travelers searching for a budget-friendly Udupi homestay near Manipal and local dining spots.",
     amenities: [
@@ -238,7 +238,7 @@ export const homestays: Homestay[] = [
     title: "CHALET LA BONNE VIE",
     subtitle: "2BHK Modern House",
     route: "ChaletLabonne",
-    image: "/chaletlabonnevie.webp",
+    image: "/chalet/new/1.webp",
     description: "Unique 2BHK nature homestay near Udupi, accommodating up to 5 guests with 3 bathrooms, bird sanctuary and farm access.",
     longDescription: "Chalet La Bonne Vie is a distinctive homestay near Udupi featuring 2 bedrooms and 3 bathrooms for nature lovers who want a quieter, eco-inspired retreat. This modern home combines comfort with immersive outdoor experiences, making it an excellent choice for couples and small families seeking an offbeat Udupi homestay.",
     amenities: [
@@ -281,7 +281,7 @@ export const homestays: Homestay[] = [
     title: "VIEWPOINT OASIS",
     subtitle: "Premium Retreat with Facilities",
     route: "ViewPoint",
-    image: "/viewpoint.webp",
+    image: "/view/new/1.webp",
     description: "Premium Udupi homestay with stunning viewpoints, swimming pool, BBQ counter, and jacuzzi for group celebrations.",
     longDescription: "Viewpoint Oasis is a premium homestay in Udupi with standout features including scenic viewpoints, swimming pool, and dedicated BBQ counter for group gatherings. Perfect for celebrations and upscale weekend escapes, this property suits guests looking for the best homestay in Udupi with comfort, privacy, and modern amenities.",
     amenities: [

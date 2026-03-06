@@ -4,17 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useIsMobile } from "@/lib/useIsMobile";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const homestays = [
-  { id: 1, name: "WHITE HOUSE", image: "whitehouse.webp", rooms: 6, guests: 35 },
-  { id: 2, name: "GARDEN VILLA", image: "gardenvilla.webp", rooms: 5, guests: 20 },
-  { id: 3, name: "COTTAGE HOUSE", image: "cottagehouse.webp", rooms: 3, guests: 15 },
-  { id: 4, name: "HILL TOP VILLA", image: "hilltopvilla.webp", rooms: 4, guests: 25 },
-  { id: 5, name: "SUNRISE HOME", image: "sunrise home.webp", rooms: 4, guests: 18 },
-  { id: 6, name: "CHALET LA BONNE VIE", image: "chaletlabonnevie.webp", rooms: 5, guests: 20 },
-  { id: 7, name: "VIEWPOINT OASIS", image: "viewpoint.webp", rooms: 4, guests: 22 },
+  { id: 1, name: "WHITE HOUSE", image: "whitehouse/new/1.webp", rooms: 6, guests: 35, route: "/Whitehouse" },
+  { id: 2, name: "GARDEN VILLA", image: "gradernVilla/new/1.webp", rooms: 5, guests: 20, route: "/GardenVilla" },
+  { id: 3, name: "COTTAGE HOUSE", image: "Cottage/new/1.webp", rooms: 3, guests: 15, route: "/CottageHouse" },
+  { id: 4, name: "HILL TOP VILLA", image: "hilltop/new/_DSC3635.webp", rooms: 4, guests: 25, route: "/TopVilla" },
+  { id: 5, name: "SUNRISE HOME", image: "sunrise/new/_DSC3534.webp", rooms: 4, guests: 18, route: "/SunriseHome" },
+  { id: 6, name: "CHALET LA BONNE VIE", image: "chalet/new/1.webp", rooms: 5, guests: 20, route: "/ChaletLabonne" },
+  { id: 7, name: "VIEWPOINT OASIS", image: "view/new/1.webp", rooms: 4, guests: 22, route: "/ViewPoint" },
 ];
 
 export default function HomestaysHorizontalScroll() {
@@ -89,7 +90,7 @@ export default function HomestaysHorizontalScroll() {
       id="homestays-section"
       className="relative bg-cover bg-center bg-no-repeat bg-fixed"
       style={{
-        backgroundImage: "url(/view/2.webp)",
+        backgroundImage: "url(/view/new/2.webp)",
         backgroundColor: "#f8f7f4",
       }}
     >
@@ -117,8 +118,9 @@ export default function HomestaysHorizontalScroll() {
             const isCenter = index === centerCardIndex;
 
             return (
-              <div
+              <Link
                 key={homestay.id}
+                href={homestay.route}
                 className={`relative shrink-0 rounded-full border border-white/20 transition-all duration-500 overflow-hidden ${
                   isCenter
                     ? "shadow-[0_25px_80px_rgba(0,0,0,0.5)]"
@@ -154,11 +156,11 @@ export default function HomestaysHorizontalScroll() {
                     <span>Up to {homestay.guests}</span>
                   </div>
 
-                  <button className="w-full py-3 px-6 font-bold text-white uppercase text-xs tracking-wider rounded-lg bg-[#849826] hover:bg-[#6d7d1f] transition">
+                  <div className="w-full py-3 px-6 font-bold text-white uppercase text-xs tracking-wider rounded-lg bg-[#849826] hover:bg-[#6d7d1f] transition text-center">
                     View Details
-                  </button>
+                  </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
