@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Phone, Menu, X } from "lucide-react";
+import { Phone, Menu, X, ChevronDown } from "lucide-react";
+import { homestays } from "@/data/homestays";
 
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Home Stays", href: "/homestays" },
+  { label: "Home Stays", href: "/homestays", hasDropdown: true },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact Us", href: "/contact" },
 ];
@@ -19,6 +20,8 @@ export default function SiteHeader() {
   // Default to false so text is white on load (over hero)
   const [isOverWhite, setIsOverWhite] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!mobileMenuOpen) {
@@ -135,15 +138,50 @@ export default function SiteHeader() {
           className="hidden lg:flex items-center gap-4 xl:gap-8 2xl:gap-10 px-2 xl:px-6 2xl:px-8 h-full rounded-2xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition-all duration-500 bg-white/10 border border-white/15 min-h-0"
         >
           {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`text-sm xl:text-base 2xl:text-lg font-semibold tracking-wide transition-colors duration-300 whitespace-nowrap ${
-                isOverWhite ? "text-gray-900! hover:text-[#849826]!" : "text-white! hover:text-white/90!"
-              }`}
-            >
-              {item.label}
-            </Link>
+            item.hasDropdown ? (
+              <div
+                key={item.label}
+                className="relative"
+                onMouseEnter={() => setDropdownOpen(true)}
+                onMouseLeave={() => setDropdownOpen(false)}
+              >
+                <Link
+                  href={item.href}
+                  className={`flex items-center gap-1 text-sm xl:text-base 2xl:text-lg font-semibold tracking-wide transition-colors duration-300 whitespace-nowrap ${
+                    isOverWhite ? "text-gray-900! hover:text-[#849826]!" : "text-white! hover:text-white/90!"
+                  }`}
+                >
+                  {item.label}
+                  <ChevronDown size={16} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </Link>
+                
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl border border-white/20 overflow-hidden z-50">
+                    {homestays.map((homestay) => (
+                      <Link
+                        key={homestay.id}
+                        href={`/${homestay.route.toLowerCase()}`}
+                        className="block px-4 py-3 text-sm font-medium text-gray-800 hover:bg-[#849826] hover:text-white transition-colors duration-200"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        {homestay.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`text-sm xl:text-base 2xl:text-lg font-semibold tracking-wide transition-colors duration-300 whitespace-nowrap ${
+                  isOverWhite ? "text-gray-900! hover:text-[#849826]!" : "text-white! hover:text-white/90!"
+                }`}
+              >
+                {item.label}
+              </Link>
+            )
           ))}
         </nav>
 
@@ -225,14 +263,43 @@ export default function SiteHeader() {
             {/* Navigation Items */}
             <nav className="flex flex-col gap-2 mb-8">
               {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="px-4 py-3 text-base font-semibold text-white! hover:bg-white/10 hover:text-white/90! transition-all duration-200 rounded-lg"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
+                item.hasDropdown ? (
+                  <div key={item.label}>
+                    <button
+                      onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+                      className="w-full flex items-center justify-between px-4 py-3 text-base font-semibold text-white! hover:bg-white/10 hover:text-white/90! transition-all duration-200 rounded-lg"
+                    >
+                      {item.label}
+                      <ChevronDown size={18} className={`transition-transform duration-200 ${mobileDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {mobileDropdownOpen && (
+                      <div className="mt-1 ml-4 flex flex-col gap-1">
+                        {homestays.map((homestay) => (
+                          <Link
+                            key={homestay.id}
+                            href={`/${homestay.route.toLowerCase()}`}
+                            className="px-4 py-2.5 text-sm font-medium text-white/80! hover:text-white! hover:bg-white/10 transition-all duration-200 rounded-lg"
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              setMobileDropdownOpen(false);
+                            }}
+                          >
+                            {homestay.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="px-4 py-3 text-base font-semibold text-white! hover:bg-white/10 hover:text-white/90! transition-all duration-200 rounded-lg"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )
               ))}
             </nav>
 

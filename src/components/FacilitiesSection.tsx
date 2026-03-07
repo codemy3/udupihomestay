@@ -99,7 +99,7 @@ export function PriceTag({ active }: { active: boolean }) {
       {active && (
         <motion.div
           key="price-tag-3d"
-          className="absolute top-0 right-3 sm:right-6 lg:right-8 xl:right-16 z-30"
+          className="absolute top-2 right-2 sm:top-0 sm:right-3 md:right-6 lg:right-8 xl:right-16 z-30"
           style={{ transformOrigin: 'top center' }}
           initial={{
             y: -140,
@@ -158,13 +158,13 @@ export function PriceTag({ active }: { active: boolean }) {
             <style>{`
               .price-tag-scale-wrapper {
                 transform-origin: top center;
-                transform: scale(0.62);
+                transform: scale(0.75);
               }
               @media (min-width: 480px) {
-                .price-tag-scale-wrapper { transform: scale(0.75); }
+                .price-tag-scale-wrapper { transform: scale(0.85); }
               }
               @media (min-width: 768px) {
-                .price-tag-scale-wrapper { transform: scale(0.88); }
+                .price-tag-scale-wrapper { transform: scale(0.95); }
               }
               @media (min-width: 1024px) {
                 .price-tag-scale-wrapper { transform: scale(1); }
